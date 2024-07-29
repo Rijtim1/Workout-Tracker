@@ -14,11 +14,13 @@ services:
 
   frontend:
     build:
-      context: ./workout-tracker-client
-    environment:
-      - NODE_ENV=production
+      context: ./client-workout-tracker
     ports:
       - "3000:3000"
+    volumes:
+      - ./client-workout-tracker:/app
+    environment:
+      - NODE_ENV=development
 
   # Uncomment the following lines if you want to add a PostgreSQL database
   # db:
