@@ -3,3 +3,4 @@ __pycache__
 *.pyc
 backend-workout-tracker/src/__pycache__/__init__.cpython-312.pyc
 /backend-workout-tracker/src/__pycache__
+*.pyc
