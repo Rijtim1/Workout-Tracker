@@ -10,12 +10,13 @@ services:
       - ./backend-workout-tracker:/app
     environment:
       - SECRET_KEY=dadsjkfhasiduflajkbsdfoiahedfasdlkfnalsjd
+      - NODE_ENV=development # Ensure NODE_ENV is set for backend if needed
 
   frontend:
     build:
       context: ./workout-tracker-client
     environment:
-      NODE_ENV: production
+      - NODE_ENV=production
     ports:
       - "3000:3000"
 
