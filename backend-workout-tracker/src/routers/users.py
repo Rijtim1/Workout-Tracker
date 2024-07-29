@@ -8,14 +8,16 @@ from src.core.config import settings
 
 router = APIRouter()
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/user/token")
 
 @router.post("/register_user/", response_model=User)
 def register_user(user: UserCreate):
+    print("Received registration data:", user)
     db_user = get_user_by_username(user.username)
     if db_user:
         raise HTTPException(status_code=400, detail="Username already registered")
-    return create_user(user)
+    new_user = create_user(user)
+    return new_user
 
 @router.post("/token", response_model=dict)
 def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
