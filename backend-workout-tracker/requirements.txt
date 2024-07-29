@@ -1,6 +1,6 @@
 fastapi
 uvicorn[standard]
 pydantic
-jose
+pyjwt
 passlib[bcrypt]
 watchfiles

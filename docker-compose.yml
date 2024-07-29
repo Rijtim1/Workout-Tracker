@@ -9,7 +9,7 @@ services:
     volumes:
       - ./backend-workout-tracker:/app
     environment:
-      - SECRET_KEY=your_secret_key
+      - SECRET_KEY=dadsjkfhasiduflajkbsdfoiahedfasdlkfnalsjd
 
   frontend:
     build:
