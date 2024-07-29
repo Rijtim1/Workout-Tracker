@@ -10,7 +10,7 @@ router = APIRouter()
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-@router.post("/users/", response_model=User)
+@router.post("/register_user/", response_model=User)
 def register_user(user: UserCreate):
     db_user = get_user_by_username(user.username)
     if db_user:
