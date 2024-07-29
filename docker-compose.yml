@@ -1,7 +1,7 @@
 version: '3.9'
 
 services:
-  web:
+  backend:
     build:
       context: ./backend-workout-tracker
     ports:
@@ -9,12 +9,9 @@ services:
     volumes:
       - ./backend-workout-tracker:/app
     environment:
-      - HOST=0.0.0.0
-      - PORT=8000
-    # depends_on:
-    #   - db
+      - SECRET_KEY=your_secret_key
 
-  server:
+  frontend:
     build:
       context: ./frontend-workout-tracker
     environment:
@@ -22,14 +19,15 @@ services:
     ports:
       - "3000:3000"
 
-#   db:
-#     image: postgres:13
-#     volumes:
-#       - postgres_data:/var/lib/postgresql/data
-#     environment:
-#       POSTGRES_USER: yourusername
-#       POSTGRES_PASSWORD: yourpassword
-#       POSTGRES_DB: yourdatabase
+  # Uncomment the following lines if you want to add a PostgreSQL database
+  # db:
+  #   image: postgres:13
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   environment:
+  #     POSTGRES_USER: yourusername
+  #     POSTGRES_PASSWORD: yourpassword
+  #     POSTGRES_DB: yourdatabase
 
 # volumes:
 #   postgres_data:
