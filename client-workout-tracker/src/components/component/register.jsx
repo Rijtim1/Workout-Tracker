@@ -21,7 +21,7 @@ export function Register() {
     };
 
     try {
-      const response = await fetch("/api/user/register_user/", {
+      const response = await fetch("http://localhost:8000/api/user/register_user/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
