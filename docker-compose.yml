@@ -2,35 +2,31 @@ version: '3.9'
 
 services:
   backend:
+    container_name: backend-service
     build:
       context: ./backend-workout-tracker
     ports:
       - "8000:8000"
     volumes:
       - ./backend-workout-tracker:/app
+      - /app/node_modules
     environment:
       - SECRET_KEY=dadsjkfhasiduflajkbsdfoiahedfasdlkfnalsjd
-      - NODE_ENV=development # Ensure NODE_ENV is set for backend if needed
+      - NODE_ENV=development
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
   frontend:
+    container_name: frontend-service
     build:
       context: ./client-workout-tracker
+      dockerfile: Dockerfile.dev
     ports:
       - "3000:3000"
     volumes:
       - ./client-workout-tracker:/app
+      - /app/node_modules
+      - ./client-workout-tracker/.next:/app/.next
     environment:
       - NODE_ENV=development
-
-  # Uncomment the following lines if you want to add a PostgreSQL database
-  # db:
-  #   image: postgres:13
-  #   volumes:
-  #     - postgres_data:/var/lib/postgresql/data
-  #   environment:
-  #     POSTGRES_USER: yourusername
-  #     POSTGRES_PASSWORD: yourpassword
-  #     POSTGRES_DB: yourdatabase
-
-# volumes:
-#   postgres_data:
+      - WATCHPACK_POLLING=true
+    command: npm run dev
