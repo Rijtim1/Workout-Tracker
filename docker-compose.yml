@@ -13,7 +13,7 @@ services:
 
   frontend:
     build:
-      context: ./frontend-workout-tracker
+      context: ./workout-tracker-client
     environment:
       NODE_ENV: production
     ports:
