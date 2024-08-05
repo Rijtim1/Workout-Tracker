@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -8,11 +9,42 @@ export function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState(null);
-  const [isError, setIsError] = useState(false); // State to track if the message is an error
+  const [isError, setIsError] = useState(false);
+
+  const validateEmail = (email) => {
+    // Simple email validation regex
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage(null); // Reset message state
+
+    // Input validation
+    if (!name) {
+      setMessage("Username is required.");
+      setIsError(true);
+      return;
+    }
+
+    if (!email) {
+      setMessage("Email is required.");
+      setIsError(true);
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      setMessage("Invalid email format.");
+      setIsError(true);
+      return;
+    }
+
+    if (password.length < 6) {
+      setMessage("Password must be at least 6 characters long.");
+      setIsError(true);
+      return;
+    }
 
     const user = {
       username: name,

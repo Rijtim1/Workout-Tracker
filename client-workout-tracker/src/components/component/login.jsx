@@ -1,4 +1,6 @@
+"use client";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation"; // Import from next/navigation
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -8,6 +10,7 @@ export function Login() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState(null);
   const [isError, setIsError] = useState(false);
+  const router = useRouter(); // Use the correct useRouter
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,12 +34,15 @@ export function Login() {
         throw new Error(data.detail || "Something went wrong");
       }
 
+      // Store the token in local storage
+      localStorage.setItem("token", data.access_token);
+
       // Display success message
       setMessage("Login successful!");
       setIsError(false); // Set isError to false for a success message
 
-      // Optionally, store the token in localStorage or context
-      // localStorage.setItem('token', data.access_token);
+      // Redirect to dashboard
+      router.push("/dashboard");
 
     } catch (err) {
       // Display error message
@@ -54,7 +60,7 @@ export function Login() {
           <Label htmlFor="username">Username</Label>
           <Input
             id="username"
-            type="username"
+            type="text"
             placeholder="my_username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
