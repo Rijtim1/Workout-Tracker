@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from datetime import timedelta
 from src.schemas.user import UserCreate, User
-from src.services.user_service import create_user, get_user_by_username
+from src.services.user_service import create_user, get_user_by_username, get_all_users
 from src.core.security import create_access_token, verify_password
 from src.core.config import settings
 
@@ -33,3 +33,7 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
         data={"sub": user.username}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
+
+@router.get("/all/users")
+def get_all_the_users():
+    return get_all_users()
