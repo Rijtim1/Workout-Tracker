@@ -12,6 +12,9 @@ services:
     environment:
       - SECRET_KEY=dadsjkfhasiduflajkbsdfoiahedfasdlkfnalsjd
       - NODE_ENV=development
+      - MONGODB_URI=mongodb://root:example@mongo:27017/workout-db?authSource=admin
+    depends_on:
+      - mongo
     command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
 
   frontend:
@@ -28,3 +31,29 @@ services:
       - NODE_ENV=development
       - WATCHPACK_POLLING=true
     command: npm run dev
+
+  mongo:
+    container_name: mongo-db
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=example
+    volumes:
+      - mongo-data:/data/db
+
+  mongo-express:
+    container_name: mongo-express
+    image: mongo-express:latest
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mongo
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=root
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=example
+      - ME_CONFIG_MONGODB_SERVER=mongo
+
+volumes:
+  mongo-data:

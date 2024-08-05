@@ -1,17 +1,28 @@
-from typing import Dict
+from typing import Optional, List
+from bson import ObjectId
 from src.schemas.user import UserCreate, User
 from src.core.security import get_password_hash
+from src.db.database import mongodb
 
-fake_users_db: Dict[str, User] = {}
-
-def create_user(user: UserCreate) -> User:
+async def create_user(user: UserCreate) -> User:
     hashed_password = get_password_hash(user.password)
-    new_user = User(username=user.username, email=user.email, id=len(fake_users_db)+1)
-    fake_users_db[user.email] = new_user
-    return new_user
+    user_data = {
+        "_id": str(ObjectId()),  # Generate a new unique ID and store it as a string
+        "username": user.username,
+        "email": user.email,
+        "password_hash": hashed_password
+    }
+    await mongodb.db["users"].insert_one(user_data)
+    return User(id=user_data["_id"], **user.dict())
 
-def get_user_by_username(username: str) -> User:
-    for user in fake_users_db.values():
-        if user.username == username:
-            return user
+async def get_user_by_username(username: str) -> Optional[User]:
+    user_data = await mongodb.db["users"].find_one({"username": username})
+    if user_data:
+        return User(id=str(user_data["_id"]), **user_data)
     return None
+
+async def get_all_users() -> List[User]:
+    users = []
+    async for user_data in mongodb.db["users"].find():
+        users.append(User(id=str(user_data["_id"]), **user_data))
+    return users
