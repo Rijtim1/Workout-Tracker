@@ -8,11 +8,12 @@ export function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
+  const [isError, setIsError] = useState(false); // State to track if the message is an error
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
+    setMessage(null); // Reset message state
 
     const user = {
       username: name,
@@ -29,23 +30,26 @@ export function Register() {
         body: JSON.stringify(user),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const data = await response.json();
         throw new Error(data.detail || "Something went wrong");
       }
 
-      const data = await response.json();
-      console.log("User registered successfully:", data);
-      // Redirect or show success message here
+      // Display success message
+      setMessage("User registered successfully!");
+      setIsError(false); // Set isError to false for a success message
     } catch (err) {
-      setError(err.message);
+      // Display error message
+      setMessage(`Error: ${err.message}`);
+      setIsError(true); // Set isError to true for an error message
     }
   };
 
   return (
     <div className="space-y-4">
       <h2 className="text-2xl font-bold tracking-tight">Create Account</h2>
-      {error && <p className="text-red-500">{error}</p>}
+      {message && <p className={isError ? "text-red-500" : "text-green-500"}>{message}</p>}
       <form className="grid gap-4" onSubmit={handleSubmit}>
         <div className="grid gap-2">
           <Label htmlFor="name">Name</Label>
