@@ -9,7 +9,8 @@ class UserCreate(UserBase):
     password: str
 
 class User(UserBase):
-    id: Optional[str]  # Use Optional[str] to align with MongoDB's _id field stored as string
+    id: Optional[str]
+    password_hash: Optional[str]  # Include password_hash as an optional field
 
     class Config:
         orm_mode = True

@@ -22,7 +22,7 @@ async def register_user(user: UserCreate):
 @router.post("/token", response_model=dict)
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
     user = await get_user_by_username(form_data.username)
-    if not user or not verify_password(form_data.password, user.password_hash):
+    if not user or not verify_password(form_data.password, user.password_hash):  # Correctly use password_hash
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",
@@ -33,8 +33,3 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
-
-@router.get("/all/users", response_model=List[User])
-async def get_all_the_users():
-    users = await get_all_users()  # Ensure you await the coroutine
-    return users

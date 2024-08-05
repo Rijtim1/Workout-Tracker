@@ -1,4 +1,3 @@
-"use client";
 import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -52,11 +51,11 @@ export function Register() {
       {message && <p className={isError ? "text-red-500" : "text-green-500"}>{message}</p>}
       <form className="grid gap-4" onSubmit={handleSubmit}>
         <div className="grid gap-2">
-          <Label htmlFor="name">Name</Label>
+          <Label htmlFor="username">Username</Label>
           <Input
-            id="name"
+            id="username"
             type="text"
-            placeholder="John Doe"
+            placeholder="john_doe"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />

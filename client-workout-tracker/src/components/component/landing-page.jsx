@@ -1,3 +1,5 @@
+"use client";
+
 import { Register } from "@/components/component/Register";
 import { Login } from "@/components/component/login";
 import { Welcome } from "@/components/component/welcome";
