@@ -54,9 +54,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 
 @router.post("/logout", response_model=dict)
 async def logout(token: str = Depends(oauth2_scheme)):
-    print(token)
     user_data = decode_access_token(token=token)
-    print("USER DATA FROM ACCESS TOKEN:", user_data)
 
     # Get the User object
     user = await get_user_by_username(username=user_data.get("sub"))
