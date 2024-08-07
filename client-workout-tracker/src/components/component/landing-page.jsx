@@ -3,28 +3,36 @@ import React, { useEffect, useState } from 'react';
 import { Register } from '@/components/component/Register';
 import { Login } from '@/components/component/Login';
 import { Welcome } from '@/components/component/Welcome';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'; // Import Tabs components
 
 export function LandingPage() {
-  // Use state to handle client-specific logic, such as showing/hiding components
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    // Set the mounted state to true to ensure code runs only on the client
-    setIsMounted(true);
+    setIsMounted(true);  // Ensures the component logic is handled client-side.
   }, []);
 
-  // Conditional rendering based on whether the component is mounted
   if (!isMounted) {
-    return null; // Optionally return a loading state here
+    return null; // Optionally return a placeholder or loading indicator.
   }
 
   return (
-    <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
       <Welcome />
-      <div className="mx-auto grid w-full max-w-[800px] grid-cols-1 gap-8 rounded-lg border bg-card p-6 shadow-lg md:grid-cols-2 md:gap-12 md:p-12">
-        <Login />
-        <Register />
-      </div>
+      <Tabs defaultValue="login" className="w-full max-w-md">
+        <TabsList className="mb-4 flex justify-center">
+          <TabsTrigger value="login" className="flex-1 text-center">Login</TabsTrigger>
+          <TabsTrigger value="register" className="flex-1 text-center">Register</TabsTrigger>
+        </TabsList>
+        <div className="rounded-lg border bg-card p-6 shadow-lg">
+          <TabsContent value="login">
+            <Login />
+          </TabsContent>
+          <TabsContent value="register">
+            <Register />
+          </TabsContent>
+        </div>
+      </Tabs>
     </div>
   );
 }
