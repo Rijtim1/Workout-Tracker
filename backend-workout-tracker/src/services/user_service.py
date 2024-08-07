@@ -5,7 +5,7 @@ from fastapi import HTTPException
 import jwt
 from bson import ObjectId  # type: ignore
 from src.schemas.user import UserCreate, User, TokenData
-from src.core.security import get_password_hash
+from src.core.security import get_password_hash, decode_access_token
 from src.db.database import mongodb
 import logging
 from src.core.config import settings
@@ -92,3 +92,20 @@ def get_user_id_from_token(token: str) -> str:
         return user_id
     except jwt.PyJWTError:  # Corrected exception handling
         raise HTTPException(status_code=401, detail="Invalid token")
+
+
+# async def get_current_user(token: str = Depends(oauth2_scheme)):
+#     try:
+#         payload = decode_access_token(token)
+#         username: str = payload.get("sub")
+#         if username is None:
+#             raise HTTPException(
+#                 status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+#         user = await get_user_by_username(username)
+#         if user is None:
+#             raise HTTPException(
+#                 status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
+#         return user
+#     except jwt.PyJWTError:
+#         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+#                             detail="Could not validate credentials")

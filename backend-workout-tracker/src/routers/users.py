@@ -3,6 +3,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from datetime import timedelta, datetime
 from typing import List
 from src.schemas.user import UserCreate, User
+from src.schemas.dashbaord import DashboardData
 from src.services.user_service import create_user, get_user_by_username, add_token_to_user, invalidate_token_for_user, get_all_users, get_user_id_from_token
 from src.core.security import create_access_token, verify_password, decode_access_token
 from src.core.config import settings
@@ -74,3 +75,25 @@ async def logout(token: str = Depends(oauth2_scheme)):
 async def all_users():
     users = await get_all_users()
     return users
+
+
+async def get_current_user(token: str = Depends(oauth2_scheme)):
+    try:
+        payload = decode_access_token(token)
+        username: str = payload.get("sub")
+        if username is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+        user = await get_user_by_username(username)
+        if user is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
+        return user
+    except jwt.PyJWTError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail="Could not validate credentials")
+
+
+@router.get("/dashboard", response_model=DashboardData)
+async def read_dashboard_data(current_user: User = Depends(get_current_user)):
+    return {"data": "some dashboard data"}
