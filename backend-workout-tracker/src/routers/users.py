@@ -94,6 +94,9 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
                             detail="Could not validate credentials")
 
 
-@router.get("/dashboard", response_model=DashboardData)
+@router.get("/dashboard", response_model=dict)
 async def read_dashboard_data(current_user: User = Depends(get_current_user)):
-    return {"data": "some dashboard data"}
+    # Return the username directly for simplicity
+    print("CURRENT USER", current_user)
+    return {"username": current_user.username}
+
