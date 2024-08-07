@@ -10,9 +10,9 @@ services:
     volumes:
       - ./backend-workout-tracker:/app
     environment:
-      - SECRET_KEY=dadsjkfhasiduflajkbsdfoiahedfasdlkfnalsjd
-      - NODE_ENV=development
-      - MONGODB_URI=mongodb://root:example@mongo:27017/workout-db?authSource=admin
+      - SECRET_KEY=${SECRET_KEY}
+      - NODE_ENV=${NODE_ENV}
+      - MONGODB_URI=${MONGODB_URI}
     depends_on:
       - mongo
     command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
@@ -28,8 +28,8 @@ services:
       - /app/node_modules
       - ./client-workout-tracker/.next:/app/.next
     environment:
-      - NODE_ENV=development
-      - WATCHPACK_POLLING=true
+      - NODE_ENV=${NODE_ENV}
+      - WATCHPACK_POLLING=${WATCHPACK_POLLING}
     command: npm run dev
 
   mongo:
@@ -38,8 +38,8 @@ services:
     ports:
       - "27017:27017"
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=example
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - mongo-data:/data/db
 
@@ -51,9 +51,9 @@ services:
     depends_on:
       - mongo
     environment:
-      - ME_CONFIG_MONGODB_ADMINUSERNAME=root
-      - ME_CONFIG_MONGODB_ADMINPASSWORD=example
-      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=${ME_CONFIG_MONGODB_ADMINUSERNAME}
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=${ME_CONFIG_MONGODB_ADMINPASSWORD}
+      - ME_CONFIG_MONGODB_SERVER=${ME_CONFIG_MONGODB_SERVER}
 
 volumes:
   mongo-data:
