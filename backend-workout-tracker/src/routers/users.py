@@ -2,6 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from datetime import timedelta, datetime
 from typing import List
+
+import jwt
 from src.schemas.user import UserCreate, User
 from src.schemas.dashbaord import DashboardData
 from src.services.user_service import create_user, get_user_by_username, add_token_to_user, invalidate_token_for_user, get_all_users, get_user_id_from_token
