@@ -14,7 +14,7 @@ export function Sidebar() {
         <ul className="grid gap-2">
           <li>
             <Link
-              href="#"
+              href="/dashboard"
               className="flex items-center gap-3 rounded-lg bg-primary px-3 py-2 text-primary-foreground transition-colors hover:bg-primary/90"
               prefetch={false}
             >
