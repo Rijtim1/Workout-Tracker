@@ -42,7 +42,7 @@ export function Sidebar() {
               <span className="text-sm font-medium">Goal Management</span>
             </Link>
           </li>
-          <li>
+          {/* <li>
             <Link
               href="#"
               className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
@@ -61,7 +61,7 @@ export function Sidebar() {
               <LogOutIcon className="h-5 w-5" />
               <span className="text-sm font-medium">Logout</span>
             </Link>
-          </li>
+          </li> */}
         </ul>
       </nav>
     </aside>

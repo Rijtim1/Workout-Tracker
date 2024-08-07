@@ -1,9 +1,14 @@
 from typing import Optional, List
-from datetime import datetime
+from datetime import datetime, timedelta
+
+from fastapi import HTTPException
+import jwt
 from bson import ObjectId
 from src.schemas.user import UserCreate, User, TokenData
 from src.core.security import get_password_hash
 from src.db.database import mongodb
+import logging
+from src.core.config import settings
 
 
 async def create_user(user: UserCreate) -> User:
@@ -18,36 +23,46 @@ async def create_user(user: UserCreate) -> User:
         "tokens": []  # Initialize tokens as an empty list
     }
     await mongodb.db["users"].insert_one(user_data)
-    return User(id=user_data["_id"], username=user.username, email=user.email)
+    return User(id=user_data["_id"], username=user.username, email=user.email, password_hash=user_data.get("password_hash"))
 
 
 async def get_user_by_username(username: str) -> Optional[User]:
     """Retrieve a user by username."""
     user_data = await mongodb.db["users"].find_one({"username": username})
     if user_data:
-        # Return a User model with password_hash and tokens included for internal use only
+        tokens = [
+            TokenData(
+                token=token["token"],
+                createAt=token["createAt"],
+                expiresAt=token["expiresAt"]
+            )
+            for token in user_data.get("tokens", [])
+        ]
         return User(
             id=str(user_data["_id"]),
             username=user_data["username"],
             email=user_data["email"],
             password_hash=user_data["password_hash"],
-            tokens=user_data.get("tokens", [])
+            tokens=tokens
         )
     return None
 
 
-async def add_token_to_user(user_id: str, token: str, expires_at: datetime):
+async def add_token_to_user(user_id: str, token: str, expires_at: timedelta, create_at: datetime):
     """Add a token to the user's token list."""
+    # Convert timedelta to total seconds
+    expires_at_seconds = int(expires_at.total_seconds())
     await mongodb.db["users"].update_one(
         {"_id": user_id},
-        {"$push": {"tokens": {"token": token, "expiresAt": expires_at}}}
+        {"$push": {"tokens": {"token": token,
+                              "expiresAt": expires_at_seconds, "createAt": str(create_at)}}}
     )
 
 
 async def invalidate_token_for_user(user_id: str, token: str):
     """Invalidate a specific token for a user."""
     await mongodb.db["users"].update_one(
-        {"_id": user_id},
+        {"_id": user_id},  # Use user_id directly
         {"$pull": {"tokens": {"token": token}}}
     )
 
@@ -56,9 +71,24 @@ async def get_all_users() -> List[User]:
     """Retrieve all users from the database."""
     users = []
     async for user_data in mongodb.db["users"].find():
-        users.append(User(
-            id=str(user_data["_id"]),
-            username=user_data["username"],
-            email=user_data["email"]
-        ))
+        # Exclude password_hash when creating User instance
+        user_dict = {
+            "id": str(user_data["_id"]),
+            "username": user_data["username"],
+            "email": user_data["email"],
+            "password_hash": user_data["password_hash"],
+        }
+        users.append(User(**user_dict))
     return users
+
+
+def get_user_id_from_token(token: str) -> str:
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY,
+                             algorithms=[settings.ALGORITHM])
+        user_id: str = payload.get("sub")
+        if user_id is None:
+            raise HTTPException(status_code=401, detail="Invalid token")
+        return user_id
+    except jwt.PyJWTError:  # Corrected exception handling
+        raise HTTPException(status_code=401, detail="Invalid token")

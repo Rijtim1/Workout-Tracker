@@ -5,6 +5,7 @@ from datetime import datetime
 
 class TokenData(BaseModel):
     token: str
+    createAt: datetime
     expiresAt: datetime
 
 
