@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 from fastapi import HTTPException
 import jwt
-from bson import ObjectId
+from bson import ObjectId  # type: ignore
 from src.schemas.user import UserCreate, User, TokenData
 from src.core.security import get_password_hash
 from src.db.database import mongodb
