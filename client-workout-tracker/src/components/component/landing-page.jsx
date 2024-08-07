@@ -1,8 +1,8 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import { Register } from "@/components/component/Register";
-import { Login } from "@/components/component/Login";
-import { Welcome } from "@/components/component/Welcome";
+'use client';
+import React, { useEffect, useState } from 'react';
+import { Register } from '@/components/component/Register';
+import { Login } from '@/components/component/Login';
+import { Welcome } from '@/components/component/Welcome';
 
 export function LandingPage() {
   // Use state to handle client-specific logic, such as showing/hiding components
