@@ -42,6 +42,16 @@ export function Sidebar() {
               <span className="text-sm font-medium">Goal Management</span>
             </Link>
           </li>
+          <li>
+            <Link
+              href="/dashboard/workouts"
+              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+              prefetch={false}
+            >
+              <ClipboardListIcon className="h-5 w-5" />
+              <span className="text-sm font-medium">Workouts</span>
+            </Link>
+          </li>
           {/* <li>
             <Link
               href="#"
