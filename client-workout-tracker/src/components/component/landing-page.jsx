@@ -9,7 +9,7 @@ export function LandingPage() {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true);  // Ensures the component logic is handled client-side.
+    setIsMounted(true); // Ensures the component logic is handled client-side.
   }, []);
 
   if (!isMounted) {
@@ -21,8 +21,12 @@ export function LandingPage() {
       <Welcome />
       <Tabs defaultValue="login" className="w-full max-w-md">
         <TabsList className="mb-4 flex justify-center">
-          <TabsTrigger value="login" className="flex-1 text-center">Login</TabsTrigger>
-          <TabsTrigger value="register" className="flex-1 text-center">Register</TabsTrigger>
+          <TabsTrigger value="login" className="flex-1 text-center">
+            Login
+          </TabsTrigger>
+          <TabsTrigger value="register" className="flex-1 text-center">
+            Register
+          </TabsTrigger>
         </TabsList>
         <div className="rounded-lg border bg-card p-6 shadow-lg">
           <TabsContent value="login">
