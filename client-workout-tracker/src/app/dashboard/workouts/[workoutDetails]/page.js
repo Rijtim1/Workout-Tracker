@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import Image from 'next/image'; // Import the Image component from next/image
+import Image from 'next/image';
 
 export default function WorkoutDetail() {
   const { workoutDetails } = useParams();
@@ -88,13 +88,14 @@ export default function WorkoutDetail() {
         {workout.images.map((image, index) => (
           <Image
             key={index}
-            src={`http://localhost:8000/images/${image}`}
+            src={`https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/${image}`}
             alt={`${workout.name} image ${index + 1}`}
-            width={500} // Set appropriate width
-            height={300} // Set appropriate height
+            width={500}
+            height={300}
             layout="responsive"
             className="w-full h-auto"
           />
+
         ))}
       </div>
     </div>
