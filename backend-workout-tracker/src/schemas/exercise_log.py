@@ -16,10 +16,10 @@ class ExerciseLog(BaseModel):
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
     class Config:
-        allow_population_by_field_name = True
-        arbitrary_types_allowed = True
+        from_attributes  = True
+        populate_by_name  = True
         json_encoders = {ObjectId: str}
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "user_id": "64f19a22f1c79b002ea9b456",
                 "exercise_id": "64f19a22f1c79b002ea9b123",
