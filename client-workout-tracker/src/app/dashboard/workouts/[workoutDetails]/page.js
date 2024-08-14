@@ -1,9 +1,10 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation'; // Import from next/navigation
+import { useParams } from 'next/navigation';
+import Image from 'next/image'; // Import the Image component from next/image
 
 export default function WorkoutDetail() {
-  const { workoutDetails } = useParams(); // Destructure to get the dynamic segment
+  const { workoutDetails } = useParams();
   const [workout, setWorkout] = useState(null);
   const [error, setError] = useState(null);
 
@@ -85,10 +86,13 @@ export default function WorkoutDetail() {
       <h2 className="mt-4 text-xl font-semibold">Images:</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {workout.images.map((image, index) => (
-          <img
+          <Image
             key={index}
             src={`http://localhost:8000/images/${image}`}
             alt={`${workout.name} image ${index + 1}`}
+            width={500} // Set appropriate width
+            height={300} // Set appropriate height
+            layout="responsive"
             className="w-full h-auto"
           />
         ))}

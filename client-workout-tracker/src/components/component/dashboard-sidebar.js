@@ -28,16 +28,6 @@ export function Sidebar() {
               className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
               prefetch={false}
             >
-              <ClipboardListIcon className="h-5 w-5" />
-              <span className="text-sm font-medium">Detailed Workouts</span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="#"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
-              prefetch={false}
-            >
               <TargetIcon className="h-5 w-5" />
               <span className="text-sm font-medium">Goal Management</span>
             </Link>
@@ -49,36 +39,14 @@ export function Sidebar() {
               prefetch={false}
             >
               <ClipboardListIcon className="h-5 w-5" />
-              <span className="text-sm font-medium">Workouts</span>
+              <span className="text-sm font-medium">Browse Workouts</span>
             </Link>
           </li>
-          {/* <li>
-            <Link
-              href="#"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
-              prefetch={false}
-            >
-              <CogIcon className="h-5 w-5" />
-              <span className="text-sm font-medium">Settings</span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="#"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
-              prefetch={false}
-            >
-              <LogOutIcon className="h-5 w-5" />
-              <span className="text-sm font-medium">Logout</span>
-            </Link>
-          </li> */}
         </ul>
       </nav>
     </aside>
   );
 }
-
-
 
 function ClipboardListIcon(props) {
   return (
@@ -104,8 +72,6 @@ function ClipboardListIcon(props) {
   );
 }
 
-
-
 function HomeIcon(props) {
   return (
     <svg
@@ -125,7 +91,6 @@ function HomeIcon(props) {
     </svg>
   );
 }
-
 
 function MountainIcon(props) {
   return (
