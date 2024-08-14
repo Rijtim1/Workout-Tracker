@@ -95,7 +95,6 @@ export default function WorkoutDetail() {
             layout="responsive"
             className="w-full h-auto"
           />
-
         ))}
       </div>
     </div>
