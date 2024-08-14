@@ -2,7 +2,8 @@
 const nextConfig = {
     images: {
         domains: [
-            'localhost'
+            'localhost',
+            'raw.githubusercontent.com'
         ]
     }
 };
