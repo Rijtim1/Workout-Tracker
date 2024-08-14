@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button';
 import { useForm, Controller } from 'react-hook-form';
 
 export default function CreateExerciseLog() {
-    const { control, handleSubmit } = useForm();
+    const { control, handleSubmit, setValue, watch } = useForm();
     const [exerciseOptions, setExerciseOptions] = useState([]);
     const router = useRouter();
 
@@ -86,14 +86,15 @@ export default function CreateExerciseLog() {
             });
 
             if (!response.ok) {
-                throw new Error('Failed to create exercise log');
+                const errorData = await response.json();
+                throw new Error(`Failed to create exercise log: ${errorData.detail || 'Unknown error'}`);
             }
 
             alert('Exercise log created successfully!');
             router.push('/dashboard/exercise-log'); // Redirect to the exercise log list page
         } catch (err) {
             console.error('Error creating exercise log:', err);
-            alert('There was an error creating the exercise log.');
+            alert(`There was an error creating the exercise log: ${err.message}`);
         }
     };
 
@@ -107,9 +108,16 @@ export default function CreateExerciseLog() {
                         name="selectedExercise"
                         control={control}
                         render={({ field }) => (
-                            <Select value={field.value} onValueChange={field.onChange}>
+                            <Select
+                                value={field.value}
+                                onValueChange={(value) => {
+                                    setValue('selectedExercise', value);
+                                }}
+                            >
                                 <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select an exercise..." />
+                                    <SelectValue>
+                                        {field.value ? field.value.label : 'Select an exercise...'}
+                                    </SelectValue>
                                 </SelectTrigger>
                                 <SelectContent>
                                     {exerciseOptions.map((exercise) => (
