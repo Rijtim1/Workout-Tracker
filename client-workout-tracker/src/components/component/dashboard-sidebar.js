@@ -42,6 +42,16 @@ export function Sidebar() {
               <span className="text-sm font-medium">Browse Workouts</span>
             </Link>
           </li>
+          <li>
+            <Link
+              href="/dashboard/exercise-log/create"
+              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+              prefetch={false}
+            >
+              <LogIcon className="h-5 w-5" />
+              <span className="text-sm font-medium">Create Exercise Log</span>
+            </Link>
+          </li>
         </ul>
       </nav>
     </aside>
@@ -68,6 +78,27 @@ function ClipboardListIcon(props) {
       <path d="M12 16h4" />
       <path d="M8 11h.01" />
       <path d="M8 16h.01" />
+    </svg>
+  );
+}
+
+function LogIcon(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M5 12h14" />
+      <path d="M5 6h14" />
+      <path d="M5 18h14" />
     </svg>
   );
 }
