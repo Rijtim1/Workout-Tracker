@@ -199,7 +199,6 @@ function ClipboardListIcon(props) {
   );
 }
 
-
 function FlameIcon(props) {
   return (
     <svg
@@ -218,7 +217,3 @@ function FlameIcon(props) {
     </svg>
   );
 }
-
-
-
-
