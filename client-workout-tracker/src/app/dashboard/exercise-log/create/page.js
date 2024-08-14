@@ -67,9 +67,11 @@ export default function CreateExerciseLog() {
         }
 
         const logData = {
-            exercise_name: data.selectedExercise.label,
             exercise_id: data.selectedExercise.value,
-            duration: data.duration,
+            date: new Date(data.date),
+            sets: data.sets,
+            reps: data.reps,
+            weight: data.weight,
             notes: data.notes,
         };
 
@@ -122,12 +124,45 @@ export default function CreateExerciseLog() {
                 </div>
 
                 <div className="mb-4">
-                    <label htmlFor="duration" className="block text-sm font-medium text-gray-700">Duration (minutes)</label>
+                    <label htmlFor="date" className="block text-sm font-medium text-gray-700">Date</label>
                     <Controller
-                        name="duration"
+                        name="date"
                         control={control}
                         render={({ field }) => (
-                            <Input id="duration" type="number" {...field} required />
+                            <Input id="date" type="date" {...field} required />
+                        )}
+                    />
+                </div>
+
+                <div className="mb-4">
+                    <label htmlFor="sets" className="block text-sm font-medium text-gray-700">Sets</label>
+                    <Controller
+                        name="sets"
+                        control={control}
+                        render={({ field }) => (
+                            <Input id="sets" type="number" {...field} required />
+                        )}
+                    />
+                </div>
+
+                <div className="mb-4">
+                    <label htmlFor="reps" className="block text-sm font-medium text-gray-700">Reps</label>
+                    <Controller
+                        name="reps"
+                        control={control}
+                        render={({ field }) => (
+                            <Input id="reps" type="number" {...field} required />
+                        )}
+                    />
+                </div>
+
+                <div className="mb-4">
+                    <label htmlFor="weight" className="block text-sm font-medium text-gray-700">Weight (kg)</label>
+                    <Controller
+                        name="weight"
+                        control={control}
+                        render={({ field }) => (
+                            <Input id="weight" type="number" step="0.1" {...field} />
                         )}
                     />
                 </div>
