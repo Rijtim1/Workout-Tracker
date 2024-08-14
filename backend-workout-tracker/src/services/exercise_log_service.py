@@ -2,6 +2,8 @@ from fastapi import HTTPException
 from src.schemas.exercise_log import ExerciseLog
 from src.db.database import mongodb
 from datetime import datetime
+from typing import List
+from bson import ObjectId
 
 async def create_exercise_log(log_data: ExerciseLog) -> ExerciseLog:
     """Create a new exercise log and store it in the database."""
@@ -14,9 +16,6 @@ async def create_exercise_log(log_data: ExerciseLog) -> ExerciseLog:
         log_data.id = str(result.inserted_id)
         return log_data
     raise HTTPException(status_code=400, detail="Failed to create exercise log")
-
-from typing import List
-from bson import ObjectId
 
 async def get_exercise_logs(user_id: str) -> List[ExerciseLog]:
     """Retrieve all exercise logs for a specific user."""
