@@ -67,17 +67,24 @@ export default function CreateExerciseLog() {
             return;
         }
 
+        // Make sure selectedExercise is defined
+        if (!selectedExercise) {
+            alert('Please select an exercise.');
+            return;
+        }
+
         const logData = {
-            exercise_id: selectedExercise.value, // Use the selected exercise value
-            date: new Date(data.date),
-            sets: data.sets,
-            reps: data.reps,
-            weight: data.weight,
-            notes: data.notes,
+            exercise_id: selectedExercise.value,
+            date: new Date(data.date).toISOString(),
+            sets: parseInt(data.sets, 10),
+            reps: parseInt(data.reps, 10),
+            weight: data.weight ? parseFloat(data.weight) : null,
+            notes: data.notes || "",
         };
 
+
         try {
-            const response = await fetch('http://localhost:8000/api/exercise-log', {
+            const response = await fetch('http://localhost:8000/api/exercise_logs/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -98,6 +105,7 @@ export default function CreateExerciseLog() {
             alert(`There was an error creating the exercise log: ${err.message}`);
         }
     };
+
 
     return (
         <div className="p-6">
