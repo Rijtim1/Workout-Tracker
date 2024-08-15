@@ -110,11 +110,11 @@ export default function CreateExerciseLog() {
                         control={control}
                         render={({ field }) => (
                             <Select
-                                value={selectedExercise} // Use selectedExercise as value
+                                value={field.value?.value || ""} // Use the value directly
                                 onValueChange={(value) => {
                                     const selected = exerciseOptions.find(option => option.value === value);
                                     setSelectedExercise(selected); // Track selected exercise
-                                    setValue('selectedExercise', selected);
+                                    setValue('selectedExercise', selected); // Update the form state
                                 }}
                             >
                                 <SelectTrigger className="w-full">
@@ -178,7 +178,7 @@ export default function CreateExerciseLog() {
                     />
                 </div>
 
-                <div className="mb-4">
+                <div class="mb-4">
                     <label htmlFor="notes" className="block text-sm font-medium text-gray-700">Notes</label>
                     <Controller
                         name="notes"
