@@ -8,9 +8,11 @@ import {
   CardDescription,
   CardContent,
 } from '@/components/ui/card';
+import { Input } from '@/components/ui/input'; // Adjust the import path as necessary
 
 export default function Workouts() {
   const [workouts, setWorkouts] = useState([]);
+  const [searchQuery, setSearchQuery] = useState(''); // State for search query
 
   useEffect(() => {
     const fetchWorkouts = async () => {
@@ -50,11 +52,26 @@ export default function Workouts() {
     return str.replace(/\b\w/g, (char) => char.toUpperCase());
   };
 
+  // Filter workouts based on search query
+  const filteredWorkouts = workouts.filter((workout) =>
+    workout.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Workouts</h1>
+
+      {/* Custom Input Component for Search Bar */}
+      <Input
+        type="text"
+        placeholder="Search Workout"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        className="mb-4 p-2 border border-gray-300 rounded"
+      />
+
       <div>
-        {workouts.map((workout) => (
+        {filteredWorkouts.map((workout) => (
           <Link
             key={workout.id}
             href={`/dashboard/workouts/${workout.id}`}
