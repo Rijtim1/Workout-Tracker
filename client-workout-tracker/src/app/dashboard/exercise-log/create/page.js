@@ -15,20 +15,20 @@ import { Button } from '@/components/ui/button';
 import { useForm, Controller } from 'react-hook-form';
 
 export default function CreateExerciseLog() {
-    const { control, handleSubmit, setValue, watch } = useForm();
+    const { control, handleSubmit, setValue } = useForm();
     const [exerciseOptions, setExerciseOptions] = useState([]);
     const router = useRouter();
 
-    // Fetch exercise names from the API
+    // Fetch exercise names from the API on component mount
     useEffect(() => {
         const fetchExercises = async () => {
-            try {
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    alert('You must be logged in to create an exercise log.');
-                    return;
-                }
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('You must be logged in to create an exercise log.');
+                return;
+            }
 
+            try {
                 const response = await fetch(
                     'http://localhost:8000/api/exercise/exercises',
                     {
