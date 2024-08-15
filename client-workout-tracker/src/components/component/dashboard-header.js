@@ -35,19 +35,12 @@ export default function Header() {
 
         const data = await response.json();
         setUsername(data.username);
-        localStorage.setItem('username', data.username); // Store username in local storage
       } catch (err) {
         console.error('Error fetching user data:', err);
       }
     };
 
-    // Check if the username is already in local storage
-    const storedUsername = localStorage.getItem('username');
-    if (storedUsername) {
-      setUsername(storedUsername); // Use the stored username if available
-    } else {
-      fetchUserData(); // Fetch from API if not available in local storage
-    }
+    fetchUserData();
   }, []);
 
   const handleLogout = async () => {
@@ -64,9 +57,8 @@ export default function Header() {
         throw new Error('Logout failed');
       }
 
-      // Remove the token and username from local storage
+      // Remove the token from local storage
       localStorage.removeItem('token');
-      localStorage.removeItem('username');
 
       // Redirect to home page
       router.push('/');

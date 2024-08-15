@@ -25,4 +25,4 @@ class User(UserBase):
     tokens: Optional[List[TokenData]] = []
 
     class Config:
-        from_attributes = True
+        orm_mode = True

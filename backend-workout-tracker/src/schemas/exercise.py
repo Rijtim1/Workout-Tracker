@@ -20,4 +20,4 @@ class Exercise(ExerciseBase):
     images: List[str]
 
     class Config:
-        from_attributes = True
+        orm_mode = True
