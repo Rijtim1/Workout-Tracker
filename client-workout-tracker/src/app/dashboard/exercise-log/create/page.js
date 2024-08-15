@@ -15,8 +15,9 @@ import { Button } from '@/components/ui/button';
 import { useForm, Controller } from 'react-hook-form';
 
 export default function CreateExerciseLog() {
-    const { control, handleSubmit, setValue } = useForm();
+    const { control, handleSubmit, setValue, watch } = useForm();
     const [exerciseOptions, setExerciseOptions] = useState([]);
+    const [selectedExercise, setSelectedExercise] = useState(null); // Track the selected exercise
     const router = useRouter();
 
     // Fetch exercise names from the API on component mount
@@ -67,7 +68,7 @@ export default function CreateExerciseLog() {
         }
 
         const logData = {
-            exercise_id: data.selectedExercise.value,
+            exercise_id: selectedExercise.value, // Use the selected exercise value
             date: new Date(data.date),
             sets: data.sets,
             reps: data.reps,
@@ -109,19 +110,21 @@ export default function CreateExerciseLog() {
                         control={control}
                         render={({ field }) => (
                             <Select
-                                value={field.value}
+                                value={selectedExercise} // Use selectedExercise as value
                                 onValueChange={(value) => {
-                                    setValue('selectedExercise', value);
+                                    const selected = exerciseOptions.find(option => option.value === value);
+                                    setSelectedExercise(selected); // Track selected exercise
+                                    setValue('selectedExercise', selected);
                                 }}
                             >
                                 <SelectTrigger className="w-full">
                                     <SelectValue>
-                                        {field.value ? field.value.label : 'Select an exercise...'}
+                                        {selectedExercise ? selectedExercise.label : 'Select an exercise...'}
                                     </SelectValue>
                                 </SelectTrigger>
                                 <SelectContent>
                                     {exerciseOptions.map((exercise) => (
-                                        <SelectItem key={exercise.value} value={exercise}>
+                                        <SelectItem key={exercise.value} value={exercise.value}>
                                             {exercise.label}
                                         </SelectItem>
                                     ))}
