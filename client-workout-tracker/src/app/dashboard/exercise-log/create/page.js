@@ -102,8 +102,16 @@ export default function CreateExerciseLog() {
             router.push('/dashboard/exercise-log'); // Redirect to the exercise log list page
         } catch (err) {
             console.error('Error creating exercise log:', err);
-            alert(`There was an error creating the exercise log: ${err.message}`);
+            if (err instanceof Error) {
+                console.error('Error details:', err.message);
+            } else {
+                console.error('Error details:', err); // Log the entire error object
+            }
+
+            alert(`There was an error creating the exercise log: ${JSON.stringify(err)}`);
         }
+
+
     };
 
 
