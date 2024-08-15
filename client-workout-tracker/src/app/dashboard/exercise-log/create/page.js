@@ -42,7 +42,19 @@ export default function CreateExerciseLog() {
                 );
 
                 if (!response.ok) {
-                    throw new Error('Failed to fetch exercises');
+                    if (response.status === 401) {
+                        // Unauthorized
+                        alert('Your session has expired. Please log in again.');
+                        // Clear token and redirect to login page, if necessary
+                        localStorage.removeItem('token');
+                        // Redirect to login page
+                    } else if (response.status === 500) {
+                        // Server error
+                        alert('There was a server error. Please try again later.');
+                    } else {
+                        // Other errors
+                        throw new Error(`Failed to fetch exercises: ${response.statusText}`);
+                    }
                 }
 
                 const data = await response.json();
@@ -52,13 +64,14 @@ export default function CreateExerciseLog() {
                 }));
                 setExerciseOptions(options);
             } catch (err) {
-                console.error('Error fetching exercises:', err);
-                alert('There was an error fetching the exercises.');
+                console.error('Error fetching exercises:', err.message);
+                alert('There was an error fetching the exercises. Please check your internet connection and try again.');
             }
         };
 
         fetchExercises();
     }, []);
+
 
     const onSubmit = async (data) => {
         const token = localStorage.getItem('token');
@@ -69,9 +82,27 @@ export default function CreateExerciseLog() {
             return;
         }
 
-        // Make sure selectedExercise is defined
+        // Validate exercise selection
         if (!selectedExercise) {
             alert('Please select an exercise.');
+            return;
+        }
+
+        // Validate inputs
+        if (!data.date) {
+            alert('Please provide a valid date.');
+            return;
+        }
+        if (!data.sets || isNaN(data.sets) || parseInt(data.sets, 10) <= 0) {
+            alert('Please enter a valid number of sets.');
+            return;
+        }
+        if (!data.reps || isNaN(data.reps) || parseInt(data.reps, 10) <= 0) {
+            alert('Please enter a valid number of reps.');
+            return;
+        }
+        if (data.weight && (isNaN(data.weight) || parseFloat(data.weight) < 0)) {
+            alert('Please enter a valid weight.');
             return;
         }
 
@@ -97,16 +128,18 @@ export default function CreateExerciseLog() {
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(`Failed to create exercise log: ${JSON.stringify(errorData.detail || 'Unknown error')}`);
+                const errorMessage = errorData.detail || 'Unknown error';
+                throw new Error(`Failed to create exercise log: ${errorMessage}`);
             }
 
             alert('Exercise log created successfully!');
             router.push('/dashboard/exercise-log'); // Redirect to the exercise log list page
         } catch (err) {
-            console.error('Error creating exercise log:', err);
+            console.error('Error creating exercise log:', err.message);
             alert(`There was an error creating the exercise log: ${err.message}`);
         }
     };
+
 
 
 
