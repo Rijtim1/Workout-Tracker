@@ -62,7 +62,9 @@ export default function CreateExerciseLog() {
 
     const onSubmit = async (data) => {
         const token = localStorage.getItem('token');
-        if (!token) {
+        const userId = localStorage.getItem('username'); // Retrieve user ID from local storage or state
+
+        if (!token || !userId) {
             alert('You must be logged in to create an exercise log.');
             return;
         }
@@ -74,6 +76,7 @@ export default function CreateExerciseLog() {
         }
 
         const logData = {
+            user_id: userId, // Include the user_id
             exercise_id: selectedExercise.value,
             date: new Date(data.date).toISOString(),
             sets: parseInt(data.sets, 10),
@@ -81,7 +84,6 @@ export default function CreateExerciseLog() {
             weight: data.weight ? parseFloat(data.weight) : null,
             notes: data.notes || "",
         };
-
 
         try {
             const response = await fetch('http://localhost:8000/api/exercise_logs/', {
@@ -95,24 +97,17 @@ export default function CreateExerciseLog() {
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(`Failed to create exercise log: ${errorData.detail || 'Unknown error'}`);
+                throw new Error(`Failed to create exercise log: ${JSON.stringify(errorData.detail || 'Unknown error')}`);
             }
 
             alert('Exercise log created successfully!');
             router.push('/dashboard/exercise-log'); // Redirect to the exercise log list page
         } catch (err) {
             console.error('Error creating exercise log:', err);
-            if (err instanceof Error) {
-                console.error('Error details:', err.message);
-            } else {
-                console.error('Error details:', err); // Log the entire error object
-            }
-
-            alert(`There was an error creating the exercise log: ${JSON.stringify(err)}`);
+            alert(`There was an error creating the exercise log: ${err.message}`);
         }
-
-
     };
+
 
 
     return (
@@ -194,7 +189,7 @@ export default function CreateExerciseLog() {
                     />
                 </div>
 
-                <div class="mb-4">
+                <div className="mb-4">
                     <label htmlFor="notes" className="block text-sm font-medium text-gray-700">Notes</label>
                     <Controller
                         name="notes"
