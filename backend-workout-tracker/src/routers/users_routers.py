@@ -4,8 +4,8 @@ from datetime import timedelta, datetime
 from typing import List
 
 import jwt
-from src.schemas.user import UserCreate, User
-from src.schemas.dashbaord import DashboardData
+from src.schemas.user_schema import UserCreate, User
+from src.schemas.dashbaord_schema import DashboardData
 from src.services.user_service import create_user, get_user_by_username, add_token_to_user, invalidate_token_for_user, get_all_users, get_user_id_from_token
 from src.core.security import create_access_token, verify_password, decode_access_token
 from src.core.config import settings
@@ -99,4 +99,3 @@ async def read_dashboard_data(current_user: User = Depends(get_current_user)):
     # Return the username directly for simplicity
     print("CURRENT USER", current_user)
     return {"username": current_user.username}
-
