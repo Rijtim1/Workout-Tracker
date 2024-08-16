@@ -1,5 +1,12 @@
 'use client';
 import React, { useEffect, useState } from 'react';
+import {
+    Card,
+    CardHeader,
+    CardTitle,
+    CardDescription,
+    CardContent,
+} from '@/components/ui/card';
 
 export default function ExerciseLog() {
     const [exerciseLogs, setExerciseLogs] = useState([]);
@@ -43,22 +50,35 @@ export default function ExerciseLog() {
     }
 
     return (
-        <div className="p-4">
-            <h2 className="text-xl font-bold mb-4">Exercise Log</h2>
+        <div className="p-6">
+            <h2 className="text-2xl font-bold mb-4">Exercise Log</h2>
             {exerciseLogs.length === 0 ? (
                 <p>No exercise logs found.</p>
             ) : (
-                <ul className="space-y-4">
+                <div>
                     {exerciseLogs.map((log) => (
-                        <li key={log.date} className="border p-4 rounded">
-                            <p>Date: {new Date(log.date).toLocaleString()}</p>
-                            <p>Exercise ID: {log.exercise_id}</p>
-                            <p>Sets: {log.sets}, Reps: {log.reps}</p>
-                            <p>Weight: {log.weight} kg</p>
-                            <p>Notes: {log.notes}</p>
-                        </li>
+                        <Card key={log.date} className="cursor-pointer hover:shadow-md transition-shadow mb-6">
+                            <CardHeader>
+                                <CardTitle className="text-xl font-bold">
+                                    Exercise ID: {log.exercise_id}
+                                </CardTitle>
+                                <CardDescription className="text-gray-500">
+                                    Date: {new Date(log.date).toLocaleString()}
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent className="flex justify-between items-start">
+                                <p className="text-sm text-gray-500">
+                                    Sets: {log.sets}, Reps: {log.reps}
+                                </p>
+                                <div className="text-sm text-gray-500">
+                                    <strong>Weight:</strong> {log.weight} kg
+                                    <br />
+                                    <strong>Notes:</strong> {log.notes}
+                                </div>
+                            </CardContent>
+                        </Card>
                     ))}
-                </ul>
+                </div>
             )}
         </div>
     );
