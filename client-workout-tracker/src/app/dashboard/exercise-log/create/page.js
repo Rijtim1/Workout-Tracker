@@ -1,5 +1,4 @@
 'use client';
-
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
@@ -15,12 +14,11 @@ import { Button } from '@/components/ui/button';
 import { useForm, Controller } from 'react-hook-form';
 
 export default function CreateExerciseLog() {
-    const { control, handleSubmit, setValue, watch } = useForm();
+    const { control, handleSubmit, setValue } = useForm();
     const [exerciseOptions, setExerciseOptions] = useState([]);
     const [selectedExercise, setSelectedExercise] = useState(null); // Track the selected exercise
     const router = useRouter();
 
-    // Fetch exercise names from the API on component mount
     useEffect(() => {
         const fetchExercises = async () => {
             const token = localStorage.getItem('token');
@@ -43,16 +41,12 @@ export default function CreateExerciseLog() {
 
                 if (!response.ok) {
                     if (response.status === 401) {
-                        // Unauthorized
                         alert('Your session has expired. Please log in again.');
-                        // Clear token and redirect to login page, if necessary
                         localStorage.removeItem('token');
                         // Redirect to login page
                     } else if (response.status === 500) {
-                        // Server error
                         alert('There was a server error. Please try again later.');
                     } else {
-                        // Other errors
                         throw new Error(`Failed to fetch exercises: ${response.statusText}`);
                     }
                 }
@@ -72,23 +66,20 @@ export default function CreateExerciseLog() {
         fetchExercises();
     }, []);
 
-
     const onSubmit = async (data) => {
         const token = localStorage.getItem('token');
-        const userId = localStorage.getItem('username'); // Retrieve user ID from local storage or state
+        const userId = localStorage.getItem('username');
 
         if (!token || !userId) {
             alert('You must be logged in to create an exercise log.');
             return;
         }
 
-        // Validate exercise selection
         if (!selectedExercise) {
             alert('Please select an exercise.');
             return;
         }
 
-        // Validate inputs
         if (!data.date) {
             alert('Please provide a valid date.');
             return;
@@ -107,7 +98,7 @@ export default function CreateExerciseLog() {
         }
 
         const logData = {
-            user_id: userId, // Include the user_id
+            user_id: userId,
             exercise_id: selectedExercise.value,
             date: new Date(data.date).toISOString(),
             sets: parseInt(data.sets, 10),
@@ -133,15 +124,12 @@ export default function CreateExerciseLog() {
             }
 
             alert('Exercise log created successfully!');
-            router.push('/dashboard/exercise-log'); // Redirect to the exercise log list page
+            router.push('/dashboard/exercise-log');
         } catch (err) {
             console.error('Error creating exercise log:', err.message);
             alert(`There was an error creating the exercise log: ${err.message}`);
         }
     };
-
-
-
 
     return (
         <div className="p-6">
@@ -154,11 +142,11 @@ export default function CreateExerciseLog() {
                         control={control}
                         render={({ field }) => (
                             <Select
-                                value={field.value?.value || ""} // Use the value directly
+                                value={field.value?.value || ""}
                                 onValueChange={(value) => {
                                     const selected = exerciseOptions.find(option => option.value === value);
-                                    setSelectedExercise(selected); // Track selected exercise
-                                    setValue('selectedExercise', selected); // Update the form state
+                                    setSelectedExercise(selected);
+                                    setValue('selectedExercise', selected);
                                 }}
                             >
                                 <SelectTrigger className="w-full">

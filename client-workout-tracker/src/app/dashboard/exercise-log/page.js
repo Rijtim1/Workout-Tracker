@@ -4,18 +4,16 @@ import ExerciseCard from '@/components/component/exercise-card'; // Adjust the i
 
 export default function ExerciseLog() {
     const [exerciseLogs, setExerciseLogs] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchExerciseLogs = async () => {
             try {
-                let token = '';
-                try {
-                  token = localStorage.getItem('token');
-                } catch (e) {
-                  console.error('Error accessing localStorage:', e);
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    throw new Error('No token found');
                 }
+
                 const response = await fetch('http://localhost:8000/api/exercise_logs/', {
                     method: 'GET',
                     headers: {
@@ -33,17 +31,11 @@ export default function ExerciseLog() {
             } catch (err) {
                 console.error('Error fetching exercise logs:', err);
                 setError('Failed to load exercise logs.');
-            } finally {
-                setLoading(false);
             }
         };
 
         fetchExerciseLogs();
     }, []);
-
-    if (loading) {
-        return <div>Loading...</div>;
-    }
 
     if (error) {
         return <div>{error}</div>;
