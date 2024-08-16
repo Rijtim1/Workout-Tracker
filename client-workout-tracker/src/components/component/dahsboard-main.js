@@ -16,13 +16,16 @@ export default function ContentArea() {
   useEffect(() => {
     const fetchExerciseLogs = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/exercise_logs/', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+        const response = await fetch(
+          'http://localhost:8000/api/exercise_logs/',
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
           },
-        });
+        );
 
         if (!response.ok) {
           throw new Error('Failed to fetch exercise logs');

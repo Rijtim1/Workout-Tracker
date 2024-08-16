@@ -12,9 +12,7 @@ export default function RootLayout({ children }) {
           <div className="flex-1 pl-14 sm:pl-60">
             <Header />
             <main className="p-4 sm:p-6">
-              <Suspense fallback={<Loading />}>
-                {children}
-              </Suspense>
+              <Suspense fallback={<Loading />}>{children}</Suspense>
             </main>
           </div>
         </div>

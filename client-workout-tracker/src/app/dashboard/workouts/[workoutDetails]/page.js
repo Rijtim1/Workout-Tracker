@@ -57,7 +57,9 @@ export default function WorkoutDetail() {
           <h1 className="text-2xl font-bold mb-4">{workout.name}</h1>
           <p className="text-sm text-gray-500">Level: {workout.level}</p>
           <p className="text-sm text-gray-500">Category: {workout.category}</p>
-          <p className="text-sm text-gray-500">Equipment: {workout.equipment}</p>
+          <p className="text-sm text-gray-500">
+            Equipment: {workout.equipment}
+          </p>
           <h2 className="mt-4 text-xl font-semibold">Instructions:</h2>
           <ul className="list-disc list-inside">
             {workout.instructions.map((instruction, index) => (

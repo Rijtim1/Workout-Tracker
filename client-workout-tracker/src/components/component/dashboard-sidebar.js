@@ -59,7 +59,9 @@ export function Sidebar() {
               prefetch={false}
             >
               <LogIcon className="h-5 w-5" />
-              <span className="text-sm font-medium">View Previous Exercise</span>
+              <span className="text-sm font-medium">
+                View Previous Exercise
+              </span>
             </Link>
           </li>
         </ul>
