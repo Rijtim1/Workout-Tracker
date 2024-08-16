@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import {
   Card,
   CardHeader,
@@ -5,17 +6,49 @@ import {
   CardDescription,
   CardContent,
 } from '@/components/ui/card';
-import {
-  Table,
-  TableHeader,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableCell,
-} from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
+import ExerciseCard from '@/components/component/exercise-card'; // Adjust the import path
 
 export default function ContentArea() {
+  const [exerciseLogs, setExerciseLogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchExerciseLogs = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/api/exercise_logs/', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch exercise logs');
+        }
+
+        const data = await response.json();
+        setExerciseLogs(data);
+      } catch (err) {
+        console.error('Error fetching exercise logs:', err);
+        setError('Failed to load exercise logs.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchExerciseLogs();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
   return (
     <main className="p-4 sm:p-6">
       <div className="grid gap-6">
@@ -41,6 +74,7 @@ export default function ContentArea() {
             <div className="text-sm">Consecutive Active Days</div>
           </div>
         </div>
+
         <Card>
           <CardHeader>
             <CardTitle>Recent Workouts</CardTitle>
@@ -49,83 +83,15 @@ export default function ContentArea() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Duration</TableHead>
-                  <TableHead>Calories</TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <TableRow>
-                  <TableCell>2023-06-01</TableCell>
-                  <TableCell>Strength Training</TableCell>
-                  <TableCell>45 min</TableCell>
-                  <TableCell>350 cal</TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm">
-                        View
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        Edit
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>2023-05-30</TableCell>
-                  <TableCell>Cardio</TableCell>
-                  <TableCell>60 min</TableCell>
-                  <TableCell>450 cal</TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm">
-                        View
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        Edit
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>2023-05-25</TableCell>
-                  <TableCell>Yoga</TableCell>
-                  <TableCell>30 min</TableCell>
-                  <TableCell>150 cal</TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm">
-                        View
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        Edit
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>2023-05-20</TableCell>
-                  <TableCell>Strength Training</TableCell>
-                  <TableCell>50 min</TableCell>
-                  <TableCell>400 cal</TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm">
-                        View
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        Edit
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
+            <div>
+              {exerciseLogs.length === 0 ? (
+                <p>No recent workouts found.</p>
+              ) : (
+                exerciseLogs.map((log) => (
+                  <ExerciseCard key={log.date} exerciseLog={log} />
+                ))
+              )}
+            </div>
           </CardContent>
         </Card>
       </div>
