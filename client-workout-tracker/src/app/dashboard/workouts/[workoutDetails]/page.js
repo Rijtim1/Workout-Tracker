@@ -20,8 +20,6 @@ export default function WorkoutDetail() {
           throw new Error('Exercise ID is missing.');
         }
 
-        console.log('Fetching workout with ID:', workoutDetails);
-
         const response = await fetch(
           `http://localhost:8000/api/exercise/exercises/${workoutDetails}`,
           {
@@ -38,7 +36,6 @@ export default function WorkoutDetail() {
         }
 
         const data = await response.json();
-        console.log('Workout data:', data);
         setWorkout(data);
       } catch (err) {
         console.error('Error fetching workout details:', err);
@@ -53,50 +50,54 @@ export default function WorkoutDetail() {
 
   if (error) return <p className="text-red-500">Error: {error}</p>;
 
-  if (!workout) return <p>Loading...</p>;
-
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">{workout.name}</h1>
-      <p className="text-sm text-gray-500">Level: {workout.level}</p>
-      <p className="text-sm text-gray-500">Category: {workout.category}</p>
-      <p className="text-sm text-gray-500">Equipment: {workout.equipment}</p>
-      <h2 className="mt-4 text-xl font-semibold">Instructions:</h2>
-      <ul className="list-disc list-inside">
-        {workout.instructions.map((instruction, index) => (
-          <li key={index}>{instruction}</li>
-        ))}
-      </ul>
-      <h2 className="mt-4 text-xl font-semibold">Primary Muscles:</h2>
-      <ul className="list-disc list-inside">
-        {workout.primaryMuscles.map((muscle, index) => (
-          <li key={index}>{muscle}</li>
-        ))}
-      </ul>
-      {workout.secondaryMuscles.length > 0 && (
+      {workout && (
         <>
-          <h2 className="mt-4 text-xl font-semibold">Secondary Muscles:</h2>
+          <h1 className="text-2xl font-bold mb-4">{workout.name}</h1>
+          <p className="text-sm text-gray-500">Level: {workout.level}</p>
+          <p className="text-sm text-gray-500">Category: {workout.category}</p>
+          <p className="text-sm text-gray-500">
+            Equipment: {workout.equipment}
+          </p>
+          <h2 className="mt-4 text-xl font-semibold">Instructions:</h2>
           <ul className="list-disc list-inside">
-            {workout.secondaryMuscles.map((muscle, index) => (
+            {workout.instructions.map((instruction, index) => (
+              <li key={index}>{instruction}</li>
+            ))}
+          </ul>
+          <h2 className="mt-4 text-xl font-semibold">Primary Muscles:</h2>
+          <ul className="list-disc list-inside">
+            {workout.primaryMuscles.map((muscle, index) => (
               <li key={index}>{muscle}</li>
             ))}
           </ul>
+          {workout.secondaryMuscles.length > 0 && (
+            <>
+              <h2 className="mt-4 text-xl font-semibold">Secondary Muscles:</h2>
+              <ul className="list-disc list-inside">
+                {workout.secondaryMuscles.map((muscle, index) => (
+                  <li key={index}>{muscle}</li>
+                ))}
+              </ul>
+            </>
+          )}
+          <h2 className="mt-4 text-xl font-semibold">Images:</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {workout.images.map((image, index) => (
+              <Image
+                key={index}
+                src={`https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/${image}`}
+                alt={`${workout.name} image ${index + 1}`}
+                width={500}
+                height={300}
+                layout="responsive"
+                className="w-full h-auto"
+              />
+            ))}
+          </div>
         </>
       )}
-      <h2 className="mt-4 text-xl font-semibold">Images:</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {workout.images.map((image, index) => (
-          <Image
-            key={index}
-            src={`https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/${image}`}
-            alt={`${workout.name} image ${index + 1}`}
-            width={500}
-            height={300}
-            layout="responsive"
-            className="w-full h-auto"
-          />
-        ))}
-      </div>
     </div>
   );
 }

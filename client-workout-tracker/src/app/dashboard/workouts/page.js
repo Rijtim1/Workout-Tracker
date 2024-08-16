@@ -54,7 +54,7 @@ export default function Workouts() {
 
   // Filter workouts based on search query
   const filteredWorkouts = workouts.filter((workout) =>
-    workout.name.toLowerCase().includes(searchQuery.toLowerCase())
+    workout.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   return (
