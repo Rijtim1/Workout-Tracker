@@ -1,12 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import {
-    Card,
-    CardHeader,
-    CardTitle,
-    CardDescription,
-} from '@/components/ui/card';
-import Link from 'next/link';
+import ExerciseCard from '@/components/component/exercise-card'; // Adjust the import path based on your project structure
 
 export default function ExerciseLog() {
     const [exerciseLogs, setExerciseLogs] = useState([]);
@@ -57,22 +51,7 @@ export default function ExerciseLog() {
             ) : (
                 <div>
                     {exerciseLogs.map((log) => (
-                        <Link
-                            key={log.date}
-                            href={`/dashboard/exercise_logs/${log.exercise_id}`}
-                            prefetch={false}
-                        >
-                            <Card className="cursor-pointer hover:shadow-md transition-shadow mb-6">
-                                <CardHeader>
-                                    <CardTitle className="text-xl font-bold">
-                                        Exercise: {log.exercise_id} {/* Replace with exercise name if available */}
-                                    </CardTitle>
-                                    <CardDescription className="text-gray-500">
-                                        Date: {new Date(log.date).toLocaleString()}
-                                    </CardDescription>
-                                </CardHeader>
-                            </Card>
-                        </Link>
+                        <ExerciseCard key={log.date} exerciseLog={log} />
                     ))}
                 </div>
             )}
