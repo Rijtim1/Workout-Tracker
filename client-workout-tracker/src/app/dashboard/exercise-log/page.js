@@ -10,11 +10,17 @@ export default function ExerciseLog() {
     useEffect(() => {
         const fetchExerciseLogs = async () => {
             try {
+                let token = '';
+                try {
+                  token = localStorage.getItem('token');
+                } catch (e) {
+                  console.error('Error accessing localStorage:', e);
+                }
                 const response = await fetch('http://localhost:8000/api/exercise_logs/', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                        Authorization: `Bearer ${token}`,
                     },
                 });
 
