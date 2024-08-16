@@ -5,8 +5,8 @@ import {
     CardHeader,
     CardTitle,
     CardDescription,
-    CardContent,
 } from '@/components/ui/card';
+import Link from 'next/link';
 
 export default function ExerciseLog() {
     const [exerciseLogs, setExerciseLogs] = useState([]);
@@ -57,26 +57,22 @@ export default function ExerciseLog() {
             ) : (
                 <div>
                     {exerciseLogs.map((log) => (
-                        <Card key={log.date} className="cursor-pointer hover:shadow-md transition-shadow mb-6">
-                            <CardHeader>
-                                <CardTitle className="text-xl font-bold">
-                                    Exercise ID: {log.exercise_id}
-                                </CardTitle>
-                                <CardDescription className="text-gray-500">
-                                    Date: {new Date(log.date).toLocaleString()}
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent className="flex justify-between items-start">
-                                <p className="text-sm text-gray-500">
-                                    Sets: {log.sets}, Reps: {log.reps}
-                                </p>
-                                <div className="text-sm text-gray-500">
-                                    <strong>Weight:</strong> {log.weight} kg
-                                    <br />
-                                    <strong>Notes:</strong> {log.notes}
-                                </div>
-                            </CardContent>
-                        </Card>
+                        <Link
+                            key={log.date}
+                            href={`/dashboard/exercise_logs/${log.exercise_id}`}
+                            prefetch={false}
+                        >
+                            <Card className="cursor-pointer hover:shadow-md transition-shadow mb-6">
+                                <CardHeader>
+                                    <CardTitle className="text-xl font-bold">
+                                        Exercise: {log.exercise_id} {/* Replace with exercise name if available */}
+                                    </CardTitle>
+                                    <CardDescription className="text-gray-500">
+                                        Date: {new Date(log.date).toLocaleString()}
+                                    </CardDescription>
+                                </CardHeader>
+                            </Card>
+                        </Link>
                     ))}
                 </div>
             )}
