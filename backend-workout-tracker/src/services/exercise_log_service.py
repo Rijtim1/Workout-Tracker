@@ -7,8 +7,18 @@ from bson import ObjectId
 
 
 async def create_exercise_log(log_data: ExerciseLog) -> ExerciseLog:
-    exercise = await mongodb.db["exercises"].find_one({"_id": log_data.exercise_id})
-    if not exercise:
+    """Create a new exercise log and store it in the database."""
+
+    # Validate exercise_id as a valid ObjectId
+    try:
+        exercise_id = ObjectId(log_data.exercise_id)
+    except Exception:
+        raise HTTPException(
+            status_code=400, detail="Invalid exercise ID format")
+
+    # Check if the exercise exists in the database
+    exercise_exists = await mongodb.db["exercises"].find_one({"_id": exercise_id})
+    if not exercise_exists:
         raise HTTPException(
             status_code=400, detail="Exercise ID does not exist")
 
@@ -17,8 +27,11 @@ async def create_exercise_log(log_data: ExerciseLog) -> ExerciseLog:
     log_dict["updated_at"] = datetime.utcnow()
 
     result = await mongodb.db["exercise_logs"].insert_one(log_dict)
-    log_data.id = str(result.inserted_id)
-    return log_data
+    if result.inserted_id:
+        log_data.id = str(result.inserted_id)
+        return log_data
+    raise HTTPException(
+        status_code=400, detail="Failed to create exercise log")
 
 
 async def get_exercise_logs(user_id: str) -> List[ExerciseLog]:
