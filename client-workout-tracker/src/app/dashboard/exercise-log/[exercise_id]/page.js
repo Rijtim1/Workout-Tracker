@@ -1,7 +1,6 @@
-// client-workout-tracker\src\app\dashboard\exercise-log\[exercise_id]\page.js
 'use client';
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation'; // Use next/navigation instead of 'next/router'
+import { useParams } from 'next/navigation'; // Import useParams for dynamic route parameters
 import {
   Card,
   CardHeader,
@@ -11,13 +10,14 @@ import {
 } from '@/components/ui/card';
 
 export default function ExerciseLogDetails() {
-  const router = useRouter(); // Updated to use `useRouter` from 'next/navigation'
-  const exercise_id = router.query.exercise_id; // Direct access without destructuring
+  const { exercise_id } = useParams(); // Use useParams to get the dynamic route parameter
   const [exerciseLog, setExerciseLog] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchExerciseLog = async () => {
+      if (!exercise_id) return; // Ensure exercise_id is defined before making the fetch call
+
       try {
         const token = localStorage.getItem('token');
         if (!token) throw new Error('No token found');
@@ -36,8 +36,12 @@ export default function ExerciseLogDetails() {
         setError('Failed to load exercise log.');
       }
     };
-    if (exercise_id) fetchExerciseLog();
+
+    fetchExerciseLog();
   }, [exercise_id]);
+
+  console.log('Exercise ID:', exercise_id); // Log to verify the ID
+  console.log('Exercise Log:', exerciseLog); // Log to verify the fetched data
 
   return (
     <div className="p-6">
