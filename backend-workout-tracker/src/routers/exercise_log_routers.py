@@ -16,7 +16,7 @@ router = APIRouter()
 
 @router.post("/", response_model=ExerciseLog)
 async def create_exercise_log_endpoint(log: ExerciseLog, current_user: User = Depends(get_current_user)):
-    log.user_id = current_user.id  # Associate the log with the current user
+    log.user_id = current_user.id
     return await create_exercise_log(log)
 
 

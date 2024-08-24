@@ -1,19 +1,26 @@
-import json
-from typing import List
+from typing import List, Optional
 from src.schemas.exercise_schema import Exercise
-
-data_file_path = "data/exercises.json"
-
-
-def load_exercises() -> List[Exercise]:
-    with open(data_file_path, "r") as file:
-        exercises_data = json.load(file)
-    return [Exercise(**exercise) for exercise in exercises_data]
+from src.db.mongodb import mongodb
 
 
-def get_exercise_by_id(exercise_id: str) -> Exercise:
-    exercises = load_exercises()
-    for exercise in exercises:
-        if exercise.id == exercise_id:
-            return exercise
+async def get_all_exercises() -> List[Exercise]:
+    exercises = []
+    async for exercise_data in mongodb.db["exercises"].find():
+        exercise_data["id"] = str(exercise_data["_id"])
+        exercises.append(Exercise(**exercise_data))
+    return exercises
+
+
+async def get_exercise_by_id(exercise_id: str) -> Optional[Exercise]:
+    exercise_data = await mongodb.db["exercises"].find_one({"_id": exercise_id})
+    if exercise_data:
+        exercise_data["id"] = str(exercise_data["_id"])
+        return Exercise(**exercise_data)
     return None
+
+
+async def create_exercise(exercise_data: Exercise):
+    exercise_dict = exercise_data.dict(by_alias=True)
+    result = await mongodb.db["exercises"].insert_one(exercise_dict)
+    exercise_data.id = str(result.inserted_id)
+    return exercise_data

@@ -7,17 +7,18 @@ from bson import ObjectId
 
 
 async def create_exercise_log(log_data: ExerciseLog) -> ExerciseLog:
-    """Create a new exercise log and store it in the database."""
+    exercise = await mongodb.db["exercises"].find_one({"_id": log_data.exercise_id})
+    if not exercise:
+        raise HTTPException(
+            status_code=400, detail="Exercise ID does not exist")
+
     log_dict = log_data.dict(by_alias=True)
     log_dict["created_at"] = datetime.utcnow()
     log_dict["updated_at"] = datetime.utcnow()
 
     result = await mongodb.db["exercise_logs"].insert_one(log_dict)
-    if result.inserted_id:
-        log_data.id = str(result.inserted_id)
-        return log_data
-    raise HTTPException(
-        status_code=400, detail="Failed to create exercise log")
+    log_data.id = str(result.inserted_id)
+    return log_data
 
 
 async def get_exercise_logs(user_id: str) -> List[ExerciseLog]:
