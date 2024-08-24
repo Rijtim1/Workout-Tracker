@@ -1,3 +1,5 @@
+# Import the function
+from src.services.exercise_service import get_exercise_by_id
 from fastapi import HTTPException
 from src.schemas.exercise_log_schema import ExerciseLog
 from src.db.database import mongodb
@@ -6,22 +8,26 @@ from typing import List
 from bson import ObjectId
 
 
+import logging  # Import logging module
+
+# Set up logging
+logging.basicConfig(level=logging.DEBUG)
+
+
 async def create_exercise_log(log_data: ExerciseLog) -> ExerciseLog:
     """Create a new exercise log and store it in the database."""
 
-    # Validate exercise_id as a valid ObjectId
-    try:
-        exercise_id = ObjectId(log_data.exercise_id)
-    except Exception:
-        raise HTTPException(
-            status_code=400, detail="Invalid exercise ID format")
+    # Log the incoming exercise_id for debugging
+    logging.debug(f"Received exercise_id: {log_data.exercise_id}")
 
-    # Check if the exercise exists in the database
-    exercise_exists = await mongodb.db["exercises"].find_one({"_id": exercise_id})
-    if not exercise_exists:
+    # Fetch the exercise using its string ID to ensure it exists
+    exercise = await get_exercise_by_id(log_data.exercise_id)
+
+    if not exercise:
         raise HTTPException(
             status_code=400, detail="Exercise ID does not exist")
 
+    # Proceed with creating the log if the exercise exists
     log_dict = log_data.dict(by_alias=True)
     log_dict["created_at"] = datetime.utcnow()
     log_dict["updated_at"] = datetime.utcnow()
@@ -30,14 +36,18 @@ async def create_exercise_log(log_data: ExerciseLog) -> ExerciseLog:
     if result.inserted_id:
         log_data.id = str(result.inserted_id)
         return log_data
+
     raise HTTPException(
         status_code=400, detail="Failed to create exercise log")
 
 
 async def get_exercise_logs(user_id: str) -> List[ExerciseLog]:
-    """Retrieve all exercise logs for a specific user."""
+    """Retrieve all exercise logs for a specific user with exercise names."""
     logs = []
     async for log_data in mongodb.db["exercise_logs"].find({"user_id": user_id}):
+        # Ensure correct exercise_id format
+        exercise = await get_exercise_by_id(log_data["exercise_id"])
+        log_data["exercise_name"] = exercise.name if exercise else "Unknown Exercise"
         log_data["id"] = str(log_data["_id"])
         logs.append(ExerciseLog(**log_data))
     return logs

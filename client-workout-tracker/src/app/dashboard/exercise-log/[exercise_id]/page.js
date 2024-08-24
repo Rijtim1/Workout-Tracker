@@ -16,39 +16,36 @@ export default function ExerciseLogDetails() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!exercise_id) return;
-
-    const fetchExerciseLog = async () => {
+    const fetchExerciseLogs = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:8000/api/exercise_logs/${exercise_id}`,
-          {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${localStorage.getItem('token')}`,
-            },
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error('No token found');
+        }
+
+        const response = await fetch('http://localhost:8000/api/exercise_logs/', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
-        );
+        });
 
         if (!response.ok) {
-          throw new Error('Failed to fetch exercise log');
+          throw new Error('Failed to fetch exercise logs');
         }
 
         const data = await response.json();
-        setExerciseLog(data);
+        setExerciseLogs(data); // This should now include exercise names
       } catch (err) {
-        console.error('Error fetching exercise log:', err);
-        setError('Failed to load exercise log.');
+        console.error('Error fetching exercise logs:', err);
+        setError('Failed to load exercise logs.');
       }
     };
 
-    fetchExerciseLog();
-  }, [exercise_id]);
+    fetchExerciseLogs();
+  }, []);
 
-  if (error) {
-    return <div>{error}</div>;
-  }
 
   return (
     <div className="p-6">
