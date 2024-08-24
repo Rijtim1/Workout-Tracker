@@ -1,24 +1,16 @@
-# backend-workout-tracker/src/schemas/exercise_log_schema.py
+from pydantic import BaseModel
 from typing import Optional
-from pydantic import BaseModel, Field
 from datetime import datetime
-from bson import ObjectId
 
 
 class ExerciseLog(BaseModel):
-    id: Optional[str] = Field(
-        default_factory=lambda: str(ObjectId()), alias="_id")
-    user_id: str
+    id: Optional[str] = None  # Add this field to handle MongoDB ObjectId
     exercise_id: str
     date: datetime
     sets: int
     reps: int
-    weight: Optional[float] = None
+    weight: Optional[float]
     notes: Optional[str] = None
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
-
-    class Config:
-        from_attributes = True
-        populate_by_name = True
-        json_encoders = {ObjectId: str}
+    user_id: Optional[str] = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None

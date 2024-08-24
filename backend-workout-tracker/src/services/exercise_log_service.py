@@ -5,19 +5,18 @@ from src.db.database import mongodb
 from datetime import datetime
 from typing import List
 from bson import ObjectId
-from src.services.exercise_service import get_exercise_by_id
+from src.services.exercise_service import get_exercise_by_id, search_exercise
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
 
 
 async def create_exercise_log(log_data: ExerciseLog) -> ExerciseLog:
-    """Create a new exercise log and store it in the database."""
     logging.debug(f"Creating exercise log for exercise_id: {
                   log_data.exercise_id}")
 
     # Validate the exercise ID exists
-    exercise = await get_exercise_by_id(log_data.exercise_id)
+    exercise = await search_exercise(exercise_object_id=log_data.exercise_id)
     if not exercise:
         raise HTTPException(status_code=400, detail="Invalid exercise ID")
 

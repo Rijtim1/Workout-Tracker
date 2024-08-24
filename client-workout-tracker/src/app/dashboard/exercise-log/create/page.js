@@ -65,6 +65,9 @@ export default function CreateExerciseLog() {
       notes: data.notes || '',
     };
 
+    console.log(logData);
+
+
     try {
       const response = await fetch('http://localhost:8000/api/exercise_logs/', {
         method: 'POST',
