@@ -10,12 +10,13 @@ from src.services.exercise_log_service import (
 )
 from src.routers.users_routers import get_current_user
 from src.schemas.user_schema import User
-
+import logging
 router = APIRouter()
 
 
 @router.post("/", response_model=ExerciseLog)
 async def create_exercise_log_endpoint(log: ExerciseLog, current_user: User = Depends(get_current_user)):
+    logging.debug(f"Received exercise log data: {log.dict()}")
     log.user_id = current_user.id
     return await create_exercise_log(log)
 
