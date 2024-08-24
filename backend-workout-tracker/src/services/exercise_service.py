@@ -89,10 +89,8 @@ async def search_exercise(
             # Convert the string ID to ObjectId for MongoDB lookup
             object_id = ObjectId(exercise_object_id)
             exercise = await get_exercise_by_object_id(object_id)
-        except Exception:
-            raise HTTPException(
-                status_code=400, detail="Invalid ObjectId format"
-            )
+        except Exception as err:
+            raise HTTPException(status_code=400, detail="Invalid ObjectId format") from err
     elif exercise_id:
         # Find by custom string ID
         exercise = await get_exercise_by_id(exercise_id)
