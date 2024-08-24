@@ -58,10 +58,9 @@ async def initialize_exercise_data():
 
         # Insert the data into the collection
         await collection.insert_many(exercises_data)
-        print("Exercise data initialized.")
+        logging.info("Exercise data initialized.")
     else:
-        print("Exercise data already exists. No initialization needed.")
-
+        logging.info("Exercise data already exists. No initialization needed.")
 
 async def get_exercises_by_exercise_id(exercise_id: str) -> Exercise:
     try:
