@@ -6,9 +6,8 @@ from src.db.mongodb import mongodb
 import json
 import logging
 
-# Set up logging
-logging.basicConfig(level=logging.DEBUG)
-
+import os
+logging.basicConfig(level=os.getenv('LOG_LEVEL', 'DEBUG'))
 
 async def get_all_exercises() -> List[Exercise]:
     exercises = []
