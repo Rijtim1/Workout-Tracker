@@ -70,7 +70,7 @@ async def get_exercises_by_exercise_id(exercise_id: str) -> Exercise:
         object_id = ObjectId(exercise_id)
         # Try to find by ObjectId
         exercise = await get_exercise_by_object_id(object_id)
-    except Exception:
+    except bson.errors.InvalidId:
         # If conversion fails, fallback to find by custom string ID
         exercise = await get_exercise_by_id(exercise_id)
 
