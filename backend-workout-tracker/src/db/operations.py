@@ -1,7 +1,7 @@
-# src/db/database.py
-
+# src/db/operations.py
 from motor.motor_asyncio import AsyncIOMotorClient
 from fastapi import FastAPI
+
 
 class MongoDB:
     def __init__(self, uri: str, db_name: str):
@@ -19,7 +19,9 @@ class MongoDB:
         self.client.close()
         print("Closed connection to MongoDB")
 
+
 mongodb = MongoDB(uri="mongodb://mongo:27017", db_name="workout-db")
+
 
 def init_db(app: FastAPI):
     @app.on_event("startup")
