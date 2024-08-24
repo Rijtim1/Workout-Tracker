@@ -16,6 +16,9 @@ router = APIRouter()
 
 @router.post("/", response_model=ExerciseLog)
 async def create_exercise_log_endpoint(log: ExerciseLog, current_user: User = Depends(get_current_user)):
+async def create_exercise_log_endpoint(log: ExerciseLog, current_user: User = None):
+    if current_user is None:
+        current_user = get_current_user()
     logging.debug(f"Received exercise log data: {log.dict()}")
 
     # Set the user_id field before passing the log to the service function
