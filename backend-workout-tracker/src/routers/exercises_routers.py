@@ -1,8 +1,11 @@
-from fastapi import APIRouter, HTTPException, Depends
-from typing import List
+from fastapi import APIRouter, HTTPException, Depends, Query
+from typing import List, Optional
 from src.schemas.exercise_schema import Exercise
-from src.services.exercise_service import get_all_exercises, get_exercise_by_id
-from bson import ObjectId
+from src.services.exercise_service import (
+    get_all_exercises,
+    get_exercises_by_exercise_id,
+    search_exercise,
+)
 
 router = APIRouter()
 
@@ -13,15 +16,15 @@ async def get_all_exercises_endpoint():
 
 
 @router.get("/exercises/{exercise_id}", response_model=Exercise)
-async def get_exercises_by_exercise_id(exercise_id: str):
-    try:
-        # Validate if the exercise_id is a valid ObjectId
-        object_id = ObjectId(exercise_id)
-    except Exception:
-        raise HTTPException(
-            status_code=400, detail="Invalid exercise ID format")
+async def get_exercises_by_exercise_id_endpoint(exercise_id: str):
+    return await get_exercises_by_exercise_id(exercise_id)
 
-    exercise = await get_exercise_by_id(object_id)
-    if exercise is None:
-        raise HTTPException(status_code=404, detail="Exercise not found")
-    return exercise
+
+@router.get("/exercise/search", response_model=Exercise)
+async def search_exercise_endpoint(
+    exercise_id: Optional[str] = Query(
+        None, description="Custom string ID of the exercise"),
+    exercise_object_id: Optional[str] = Query(
+        None, description="MongoDB ObjectId of the exercise")
+):
+    return await search_exercise(exercise_id, exercise_object_id)
