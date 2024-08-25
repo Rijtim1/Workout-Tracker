@@ -1,25 +1,29 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation'; // Import useRouter
+import { useParams, useRouter } from 'next/navigation';
 import {
   Card,
   CardHeader,
   CardTitle,
   CardDescription,
   CardContent,
-} from '@/components/ui/card';
-
+  CardFooter,
+} from '@/components/ui/card'; // Adjust based on your actual import paths
+import { Badge } from '@/components/ui/badge';
+import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
+import { ArrowLeft, Dumbbell, Calendar, ClipboardList } from 'lucide-react';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export default function ExerciseLogDetails() {
-  const { exercise_id } = useParams(); // Use useParams to get the dynamic route parameter
-  const router = useRouter(); // Initialize useRouter for navigation
+  const { exercise_id } = useParams();
+  const router = useRouter();
   const [exerciseLog, setExerciseLog] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchExerciseLog = async () => {
-      if (!exercise_id) return; // Ensure exercise_id is defined before making the fetch call
+      if (!exercise_id) return;
 
       try {
         const token = localStorage.getItem('token');
@@ -34,8 +38,7 @@ export default function ExerciseLogDetails() {
             },
           }
         );
-        if (!response.ok)
-          throw new Error('Failed to fetch exercise log details');
+        if (!response.ok) throw new Error('Failed to fetch exercise log details');
         const data = await response.json();
         setExerciseLog(data);
       } catch (err) {
@@ -47,45 +50,71 @@ export default function ExerciseLogDetails() {
     fetchExerciseLog();
   }, [exercise_id]);
 
-  console.log('Exercise ID:', exercise_id); // Log to verify the ID
-  console.log('Exercise Log:', exerciseLog); // Log to verify the fetched data
-
   return (
-    <div className="p-6">
+    <ScrollArea className="h-[calc(100vh-4rem)] px-6 py-6">
       <Button
-        type="submit"
-        onClick={() => router.push('/dashboard/exercise-log')} // Use router to navigate
-        className="mt-4"
+        type="button"
+        onClick={() => router.push('/dashboard/exercise-log')}
+        className="mb-6"
+        variant="outline"
       >
-        Back
+        <ArrowLeft className="mr-2 h-4 w-4" /> Back to Exercise Log
       </Button>
+
+      {/* Error Alert */}
+      {error && (
+        <Alert variant="destructive" className="mb-4">
+          {error}
+        </Alert>
+      )}
+
+      {/* Only render the Card if exerciseLog is not null */}
       {exerciseLog && (
-        <Card className="mb-6">
+        <Card className="shadow-lg">
           <CardHeader>
-            <CardTitle className="text-xl font-bold">
-              Exercise: {exerciseLog.exercise_name || 'Unknown Exercise'}
-            </CardTitle>
-            <CardDescription className="text-gray-500">
-              Date: {new Date(exerciseLog.date).toLocaleString()}
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-2xl font-bold flex items-center">
+                <Dumbbell className="mr-2 h-6 w-6" />
+                {exerciseLog.exercise_name}
+              </CardTitle>
+              <Badge variant="secondary" className="text-sm">Active</Badge>
+            </div>
+            <CardDescription className="text-gray-500 flex items-center">
+              <Calendar className="mr-2 h-4 w-4" />
+              {new Date(exerciseLog.date).toLocaleDateString()}
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <strong>Sets:</strong> {exerciseLog.sets}
-            </div>
-            <div>
-              <strong>Reps:</strong> {exerciseLog.reps}
-            </div>
-            <div>
-              <strong>Weight:</strong> {exerciseLog.weight} kg
-            </div>
-            <div>
-              <strong>Notes:</strong> {exerciseLog.notes}
+          <CardContent>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-secondary p-4 rounded-lg">
+                <h3 className="font-semibold mb-2">Sets</h3>
+                <p className="text-2xl font-bold">{exerciseLog.sets}</p>
+              </div>
+              <div className="bg-secondary p-4 rounded-lg">
+                <h3 className="font-semibold mb-2">Reps</h3>
+                <p className="text-2xl font-bold">{exerciseLog.reps}</p>
+              </div>
+              <div className="bg-secondary p-4 rounded-lg">
+                <h3 className="font-semibold mb-2">Weight</h3>
+                <p className="text-2xl font-bold">{exerciseLog.weight} kg</p>
+              </div>
+              <div className="bg-secondary p-4 rounded-lg">
+                <h3 className="font-semibold mb-2">Total Volume</h3>
+                <p className="text-2xl font-bold">{exerciseLog.sets * exerciseLog.reps * exerciseLog.weight} kg</p>
+              </div>
             </div>
           </CardContent>
+          <CardFooter>
+            <div className="w-full">
+              <h3 className="font-semibold mb-2 flex items-center">
+                <ClipboardList className="mr-2 h-4 w-4" />
+                Notes
+              </h3>
+              <p className="text-gray-600">{exerciseLog.notes}</p>
+            </div>
+          </CardFooter>
         </Card>
       )}
-      {error && <p className="text-red-500">{error}</p>}
-    </div>
+    </ScrollArea>
   );
 }
