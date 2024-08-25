@@ -10,7 +10,7 @@ export function Sidebar() {
     { href: "/dashboard", icon: Home, label: "Overview" },
     { href: "#", icon: Target, label: "Goal Management" },
     { href: "/dashboard/workouts", icon: ClipboardList, label: "Browse Workouts" },
-    { href: "/dashboard/exercise-log/create", icon: Flame, label: "Create Exercise Log" },
+    { href: "/dashboard/exercise-log/new", icon: Flame, label: "Create Exercise Log" },
     { href: "/dashboard/exercise-log", icon: Calendar, label: "View Previous Exercise" },
   ];
 
@@ -30,8 +30,8 @@ export function Sidebar() {
                 <Link
                   href={item.href}
                   className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${index === 0
-                      ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                      : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                    ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                    : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                     }`}
                   prefetch={false}
                 >
