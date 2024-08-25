@@ -21,14 +21,18 @@ export default function ExerciseLogDetails() {
       try {
         const token = localStorage.getItem('token');
         if (!token) throw new Error('No token found');
-        const response = await fetch(`http://localhost:8000/api/exercise_logs/${exercise_id}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
+        const response = await fetch(
+          `http://localhost:8000/api/exercise_logs/${exercise_id}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
           },
-        });
-        if (!response.ok) throw new Error('Failed to fetch exercise log details');
+        );
+        if (!response.ok)
+          throw new Error('Failed to fetch exercise log details');
         const data = await response.json();
         setExerciseLog(data);
       } catch (err) {
@@ -56,10 +60,18 @@ export default function ExerciseLogDetails() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div><strong>Sets:</strong> {exerciseLog.sets}</div>
-            <div><strong>Reps:</strong> {exerciseLog.reps}</div>
-            <div><strong>Weight:</strong> {exerciseLog.weight} kg</div>
-            <div><strong>Notes:</strong> {exerciseLog.notes}</div>
+            <div>
+              <strong>Sets:</strong> {exerciseLog.sets}
+            </div>
+            <div>
+              <strong>Reps:</strong> {exerciseLog.reps}
+            </div>
+            <div>
+              <strong>Weight:</strong> {exerciseLog.weight} kg
+            </div>
+            <div>
+              <strong>Notes:</strong> {exerciseLog.notes}
+            </div>
           </CardContent>
         </Card>
       )}
