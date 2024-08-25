@@ -4,8 +4,9 @@ from datetime import datetime
 
 
 class ExerciseLog(BaseModel):
-    id: Optional[str] = None  # Add this field to handle MongoDB ObjectId
+    id: Optional[str] = None  # MongoDB ObjectId
     exercise_id: str
+    exercise_name: Optional[str] = None  # New field for exercise name
     date: datetime
     sets: int
     reps: int

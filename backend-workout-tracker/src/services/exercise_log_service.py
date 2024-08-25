@@ -20,6 +20,9 @@ async def create_exercise_log(log_data: ExerciseLog) -> ExerciseLog:
     if not exercise:
         raise HTTPException(status_code=400, detail="Invalid exercise ID")
 
+    # Include exercise name from the exercise object
+    log_data.exercise_name = exercise.name
+
     # Convert to dictionary and add timestamps
     log_dict = log_data.dict(by_alias=True)
     log_dict["created_at"] = datetime.utcnow()
@@ -36,15 +39,27 @@ async def create_exercise_log(log_data: ExerciseLog) -> ExerciseLog:
 
 
 async def get_exercise_logs(user_id: str) -> List[ExerciseLog]:
-    """Retrieve all exercise logs for a specific user."""
     logging.debug(f"Fetching exercise logs for user_id: {user_id}")
     logs = []
     async for log_data in mongodb.db["exercise_logs"].find({"user_id": user_id}):
-        exercise = await get_exercise_by_id(log_data["exercise_id"])
-        log_data["exercise_name"] = exercise.name if exercise else "Unknown Exercise"
+        exercise_id = ObjectId(
+            log_data["exercise_id"]) if log_data["exercise_id"] else None
+        exercise = await get_exercise_by_id(exercise_id)
+        log_data["exercise_name"] = exercise["name"] if exercise else "Unknown Exercise"
         log_data["id"] = str(log_data["_id"])
         logs.append(ExerciseLog(**log_data))
     return logs
+
+
+async def get_exercise_by_id(exercise_id: str):
+    try:
+        exercise = await mongodb.db["exercises"].find_one({"_id": ObjectId(exercise_id)})
+        if exercise:
+            return exercise
+        return None
+    except Exception as e:
+        logging.error(f"Error fetching exercise by ID {exercise_id}: {str(e)}")
+        return None
 
 
 async def get_exercise_log(log_id: str) -> ExerciseLog:
@@ -59,9 +74,13 @@ async def get_exercise_log(log_id: str) -> ExerciseLog:
 
 
 async def update_exercise_log(log_id: str, log_data: ExerciseLog) -> ExerciseLog:
-    """Update an existing exercise log."""
     logging.debug(f"Updating exercise log with log_id: {log_id}")
     log_data.updated_at = datetime.utcnow()
+
+    # Ensure exercise_name is not lost in update
+    if log_data.exercise_id:
+        exercise = await get_exercise_by_id(log_data.exercise_id)
+        log_data.exercise_name = exercise.name if exercise else log_data.exercise_name
 
     # Update MongoDB
     updated_log = await mongodb.db["exercise_logs"].find_one_and_update(

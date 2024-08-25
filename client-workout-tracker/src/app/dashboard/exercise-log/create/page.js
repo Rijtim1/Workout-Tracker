@@ -58,16 +58,13 @@ export default function CreateExerciseLog() {
 
     const logData = {
       exercise_id: selectedExercise.value,
+      exercise_name: selectedExercise.label, // Include exercise name
       date: new Date(data.date).toISOString(),
       sets: parseInt(data.sets, 10),
       reps: parseInt(data.reps, 10),
       weight: data.weight ? parseFloat(data.weight) : null,
       notes: data.notes || '',
     };
-
-    console.log(logData);
-
-
     try {
       const response = await fetch('http://localhost:8000/api/exercise_logs/', {
         method: 'POST',
@@ -91,7 +88,10 @@ export default function CreateExerciseLog() {
       console.error('Error creating exercise log:', err.message);
       alert(`There was an error creating the exercise log: ${err.message}`);
     }
+
+    console.log(logData);
   };
+
 
   return (
     <div className="p-6">

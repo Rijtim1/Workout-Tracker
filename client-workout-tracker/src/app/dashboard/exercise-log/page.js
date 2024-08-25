@@ -21,6 +21,10 @@ export default function ExerciseLog() {
         });
         if (!response.ok) throw new Error('Failed to fetch exercise logs');
         const data = await response.json();
+
+        // Check what data is being fetched
+        console.log('Fetched exercise logs:', data);
+
         setExerciseLogs(data);
       } catch (err) {
         console.error('Error fetching exercise logs:', err);
@@ -29,6 +33,8 @@ export default function ExerciseLog() {
     };
     fetchExerciseLogs();
   }, []);
+
+
 
   if (error) return <div>{error}</div>;
 
