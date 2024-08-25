@@ -57,12 +57,12 @@ export default function ContentArea() {
       <div className="grid gap-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { icon: ClipboardList, label: "Workouts Completed", value: "12", color: "bg-primary" },
-            { icon: Bolt, label: "Calories Burned", value: "1,234", color: "bg-accent" },
-            { icon: Calendar, label: "Active Days This Week", value: "7", color: "bg-secondary" },
-            { icon: Flame, label: "Consecutive Active Days", value: "15", color: "bg-muted" },
+            { icon: ClipboardList, label: "Workouts Completed", value: "12", bgColor: "bg-blue-500", textColor: "text-white" },
+            { icon: Bolt, label: "Calories Burned", value: "1,234", bgColor: "bg-yellow-200", textColor: "text-black" },
+            { icon: Calendar, label: "Active Days This Week", value: "7", bgColor: "bg-green-200", textColor: "text-black" },
+            { icon: Flame, label: "Consecutive Active Days", value: "15", bgColor: "bg-gray-200", textColor: "text-black" },
           ].map((stat, index) => (
-            <Card key={index} className={`${stat.color} text-${stat.color}-foreground`}>
+            <Card key={index} className={`${stat.bgColor} ${stat.textColor} p-4 rounded-lg`}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">{stat.label}</CardTitle>
                 {/* Ensure the icon is correctly rendered */}
