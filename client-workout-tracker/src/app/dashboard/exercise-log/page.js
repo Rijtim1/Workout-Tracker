@@ -16,7 +16,7 @@ import { useToast } from "@/components/ui/use-toast"
 import { Loader2, Plus, Search } from "lucide-react"
 
 export default function ExerciseLog() {
-  const [exerciseLogs, setExerciseLogs] = useState([])
+  const [exerciseLogs, setExerciseLogs] = useState([]) // Initialized with an empty array
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [sortBy, setSortBy] = useState('date')
@@ -32,8 +32,9 @@ export default function ExerciseLog() {
         setLoading(true)
         const token = localStorage.getItem('token')
         if (!token) throw new Error('No token found')
+
         const response = await fetch(
-          `http://localhost:8000/api/exercise_logs/?page=${currentPage}&per_page=${logsPerPage}&sort=${sortBy}`,
+          `http://localhost:8000/api/exercise_logs/`, // Correct endpoint without query parameters
           {
             method: 'GET',
             headers: {
@@ -42,10 +43,15 @@ export default function ExerciseLog() {
             },
           }
         )
+
         if (!response.ok) throw new Error('Failed to fetch exercise logs')
+
         const data = await response.json()
-        setExerciseLogs(data.logs)
-        setTotalPages(data.total_pages)
+        console.log('Fetched exercise logs:', data) // Log to check the structure of the fetched data
+
+        // Ensure that the response data is in the expected format
+        setExerciseLogs(data.logs || data || [])
+        setTotalPages(data.total_pages || 1)
       } catch (err) {
         console.error('Error fetching exercise logs:', err)
         toast({
