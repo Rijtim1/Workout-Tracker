@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import Header from '@/components/component/dashboard-header';
+import { Header } from '@/components/component/dashboard-header';
 import { Sidebar } from '@/components/component/dashboard-sidebar';
 import Loading from './loading'; // Import your custom loading component
 
