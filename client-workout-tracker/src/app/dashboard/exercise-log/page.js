@@ -12,15 +12,22 @@ export default function ExerciseLog() {
       try {
         const token = localStorage.getItem('token');
         if (!token) throw new Error('No token found');
-        const response = await fetch('http://localhost:8000/api/exercise_logs/', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
+        const response = await fetch(
+          'http://localhost:8000/api/exercise_logs/',
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
           },
-        });
+        );
         if (!response.ok) throw new Error('Failed to fetch exercise logs');
         const data = await response.json();
+
+        // Check what data is being fetched
+        console.log('Fetched exercise logs:', data);
+
         setExerciseLogs(data);
       } catch (err) {
         console.error('Error fetching exercise logs:', err);
@@ -38,7 +45,11 @@ export default function ExerciseLog() {
       {exerciseLogs.length === 0 ? (
         <p>No exercise logs found.</p>
       ) : (
-        <div>{exerciseLogs.map(log => <ExerciseCard key={log.id} exerciseLog={log} />)}</div>
+        <div>
+          {exerciseLogs.map((log) => (
+            <ExerciseCard key={log.id} exerciseLog={log} />
+          ))}
+        </div>
       )}
     </div>
   );

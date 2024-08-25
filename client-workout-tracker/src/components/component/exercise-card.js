@@ -1,7 +1,12 @@
 // client-workout-tracker\src\components\component\exercise-card.js
 'use client';
 import React from 'react';
-import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/components/ui/card';
 import Link from 'next/link';
 
 export default function ExerciseCard({ exerciseLog }) {
