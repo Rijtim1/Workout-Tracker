@@ -24,7 +24,7 @@ export default function ExerciseLog() {
   const [totalPages, setTotalPages] = useState(1)
   const router = useRouter()
   const { toast } = useToast()
-  const logsPerPage = 9
+  const logsPerPage = 6
 
   useEffect(() => {
     const fetchExerciseLogs = async () => {
@@ -51,7 +51,7 @@ export default function ExerciseLog() {
 
         // Ensure that the response data is in the expected format
         setExerciseLogs(data.logs || data || [])
-        setTotalPages(data.total_pages || 1)
+        setTotalPages(Math.ceil((data.logs || data || []).length / logsPerPage))
       } catch (err) {
         console.error('Error fetching exercise logs:', err)
         toast({
@@ -64,11 +64,21 @@ export default function ExerciseLog() {
       }
     }
     fetchExerciseLogs()
-  }, [currentPage, sortBy, toast])
+  }, [toast])
 
-  const filteredLogs = exerciseLogs.filter(log =>
+  // Sort logs by date in descending order (latest first)
+  const sortedLogs = [...exerciseLogs].sort((a, b) => new Date(b.date) - new Date(a.date))
+
+  // Apply search filter to sorted logs
+  const filteredLogs = sortedLogs.filter(log =>
     log.exercise_name.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  );
+
+  // Calculate paginated logs based on currentPage and logsPerPage
+  const paginatedLogs = filteredLogs.slice((currentPage - 1) * logsPerPage, currentPage * logsPerPage)
+
+  console.log('Search Term:', searchTerm);
+  console.log('Filtered Logs:', filteredLogs);
 
   const handleNewExerciseLog = () => {
     router.push('/dashboard/exercise-log/new')
@@ -108,11 +118,11 @@ export default function ExerciseLog() {
         <div className="flex justify-center items-center h-64">
           <Loader2 className="h-8 w-8 animate-spin" />
         </div>
-      ) : filteredLogs.length === 0 ? (
+      ) : paginatedLogs.length === 0 ? (
         <p className="text-center text-muted-foreground">No exercise logs found.</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredLogs.map((log) => (
+          {paginatedLogs.map((log) => (
             <ExerciseCard key={log.id} exerciseLog={log} />
           ))}
         </div>
