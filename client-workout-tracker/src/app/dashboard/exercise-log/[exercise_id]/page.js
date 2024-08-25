@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation'; // Import useParams for dynamic route parameters
+import { useParams, useRouter } from 'next/navigation'; // Import useRouter
 import {
   Card,
   CardHeader,
@@ -9,8 +9,11 @@ import {
   CardContent,
 } from '@/components/ui/card';
 
+import { Button } from '@/components/ui/button';
+
 export default function ExerciseLogDetails() {
   const { exercise_id } = useParams(); // Use useParams to get the dynamic route parameter
+  const router = useRouter(); // Initialize useRouter for navigation
   const [exerciseLog, setExerciseLog] = useState(null);
   const [error, setError] = useState(null);
 
@@ -29,7 +32,7 @@ export default function ExerciseLogDetails() {
               'Content-Type': 'application/json',
               Authorization: `Bearer ${token}`,
             },
-          },
+          }
         );
         if (!response.ok)
           throw new Error('Failed to fetch exercise log details');
@@ -49,6 +52,13 @@ export default function ExerciseLogDetails() {
 
   return (
     <div className="p-6">
+      <Button
+        type="submit"
+        onClick={() => router.push('/dashboard/exercise-log')} // Use router to navigate
+        className="mt-4"
+      >
+        Back
+      </Button>
       {exerciseLog && (
         <Card className="mb-6">
           <CardHeader>

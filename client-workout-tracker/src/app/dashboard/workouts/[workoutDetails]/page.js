@@ -1,10 +1,12 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation'; // Import useRouter
 import Image from 'next/image';
+import { Button } from '@/components/ui/button';
 
 export default function WorkoutDetail() {
   const { workoutDetails } = useParams();
+  const router = useRouter(); // Initialize router
   const [workout, setWorkout] = useState(null);
   const [error, setError] = useState(null);
 
@@ -28,7 +30,7 @@ export default function WorkoutDetail() {
               'Content-Type': 'application/json',
               Authorization: `Bearer ${token}`,
             },
-          },
+          }
         );
 
         if (!response.ok) {
@@ -52,6 +54,15 @@ export default function WorkoutDetail() {
 
   return (
     <div className="p-6">
+      <Button
+        type="submit"
+        onClick={() => router.push('/dashboard/workouts')}
+        className="mt-4"
+      >
+        Back
+      </Button>
+
+
       {workout && (
         <>
           <h1 className="text-2xl font-bold mb-4">{workout.name}</h1>
