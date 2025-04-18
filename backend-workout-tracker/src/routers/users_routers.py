@@ -17,10 +17,24 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/user/token")
 
 @router.post("/register_user/", response_model=User)
 async def register_user(user: UserCreate):
+    # Check if username is already registered
     db_user = await get_user_by_username(user.username)
     if db_user:
         raise HTTPException(
             status_code=400, detail="Username already registered")
+
+    # Validate password strength
+    if len(user.password) < 8:
+        raise HTTPException(
+            status_code=400, detail="Password must be at least 8 characters long")
+    if not any(char.isdigit() for char in user.password):
+        raise HTTPException(
+            status_code=400, detail="Password must contain at least one digit")
+    if not any(char.isupper() for char in user.password):
+        raise HTTPException(
+            status_code=400, detail="Password must contain at least one uppercase letter")
+
+    # Create the new user
     new_user = await create_user(user)
     return new_user
 

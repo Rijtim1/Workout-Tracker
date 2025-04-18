@@ -24,6 +24,11 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None, c
 
 def decode_access_token(token: str) -> dict:
     try:
-        return jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
-    except jwt.PyJWTError as e:
-        raise ValueError("Error decoding JWT") from e
+        decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        if datetime.utcnow().timestamp() > decoded_token.get("exp", 0):
+            raise ValueError("Token has expired")
+        return decoded_token
+    except jwt.ExpiredSignatureError:
+        raise ValueError("Token has expired")
+    except jwt.InvalidTokenError:
+        raise ValueError("Invalid token")
