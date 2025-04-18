@@ -14,7 +14,11 @@ import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 export default function CreateExerciseLog() {
-  const { control, handleSubmit, setValue } = useForm()
+  const { control, handleSubmit, setValue } = useForm({
+    defaultValues: {
+      date: new Date().toISOString().split('T')[0], // Set default date to today
+    },
+  })
   const [exerciseOptions, setExerciseOptions] = useState([])
   const [selectedExercise, setSelectedExercise] = useState(null)
   const [error, setError] = useState(null)
